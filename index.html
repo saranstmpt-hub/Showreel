@@ -6,64 +6,116 @@
 <title>Saran Selvakumar | VFX Showreel</title>
 
 <style>
-body {
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: Arial, sans-serif;
     background: #0f0f0f;
     color: #fff;
-    text-align: center;
 }
 
-.container {
-    padding: 40px 20px;
-    max-width: 900px;
-    margin: auto;
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: #111;
+    border-bottom: 1px solid #222;
 }
 
-h1 {
-    font-size: 32px;
-    margin-bottom: 5px;
+.navbar h1 {
+    font-size: 20px;
 }
 
-h2 {
-    font-weight: normal;
+.navbar a {
     color: #aaa;
-    margin-bottom: 30px;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
 }
 
+.navbar a:hover {
+    color: #fff;
+}
+
+/* Container */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.hero h2 {
+    font-size: 36px;
+}
+
+.hero p {
+    color: #aaa;
+    margin-top: 10px;
+}
+
+/* Video */
 .video-container {
     position: relative;
     padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
     border-radius: 10px;
-    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .video-container iframe {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
 }
 
+/* Sections */
 .section {
-    margin-top: 40px;
+    margin-top: 60px;
+}
+
+.section h3 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-left: 3px solid #00bcd4;
+    padding-left: 10px;
+}
+
+/* About */
+.about p {
+    color: #bbb;
+    line-height: 1.6;
+}
+
+/* Skills */
+.skills {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .skills span {
-    display: inline-block;
     background: #1f1f1f;
     padding: 8px 12px;
-    margin: 5px;
+    margin: 6px;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 13px;
 }
 
+/* Links */
 .links a {
     display: inline-block;
-    margin: 10px;
+    margin-right: 15px;
     color: #00bcd4;
     text-decoration: none;
 }
@@ -72,8 +124,12 @@ h2 {
     text-decoration: underline;
 }
 
+/* Footer */
 .footer {
-    margin-top: 40px;
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #222;
     color: #777;
     font-size: 14px;
 }
@@ -83,44 +139,67 @@ h2 {
 
 <body>
 
+<!-- Navbar -->
+<div class="navbar">
+    <h1>Saran</h1>
+    <div>
+        <a href="#">Showreel</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
+
 <div class="container">
 
-    <h1>Saran Selvakumar</h1>
-    <h2>Compositing Artist</h2>
+    <!-- Hero -->
+    <div class="hero">
+        <h2>Saran Selvakumar</h2>
+        <p>Compositing Artist</p>
+    </div>
 
     <!-- Showreel -->
-    <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+    <div class="section">
+        <h3>Showreel</h3>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
 
     <!-- About -->
-    <div class="section">
+    <div class="section about">
+        <h3>About</h3>
         <p>
             Compositing Artist with hands-on experience in VFX pipelines, digital compositing, 
-            and post-production workflows. Focused on delivering clean, seamless, and realistic visual output.
+            and post-production workflows. Skilled in keying, rotoscoping, and multi-pass integration, 
+            with a strong focus on achieving seamless and realistic visual output.
         </p>
     </div>
 
     <!-- Skills -->
-    <div class="section skills">
-        <span>Nuke</span>
-        <span>After Effects</span>
-        <span>Photoshop</span>
-        <span>Premiere Pro</span>
-        <span>Maya</span>
-        <span>Blender</span>
-        <span>Keying</span>
-        <span>Rotoscoping</span>
-        <span>Compositing</span>
+    <div class="section">
+        <h3>Skills</h3>
+        <div class="skills">
+            <span>Nuke</span>
+            <span>After Effects</span>
+            <span>Photoshop</span>
+            <span>Premiere Pro</span>
+            <span>Maya</span>
+            <span>Blender</span>
+            <span>Keying</span>
+            <span>Rotoscoping</span>
+            <span>Compositing</span>
+        </div>
     </div>
 
-    <!-- Links -->
+    <!-- Contact -->
     <div class="section links">
+        <h3>Contact</h3>
         <a href="https://vfx-showreel.sarans24.workers.dev/" target="_blank">Portfolio</a>
         <a href="https://linkedin.com/in/saran-s-8691343b1" target="_blank">LinkedIn</a>
-        <a href="mailto:sarans24@hotmail.com">Email</a>
+        <a href="mailto:saranstmpt.com">Email</a>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
         © 2026 Saran Selvakumar
     </div>
