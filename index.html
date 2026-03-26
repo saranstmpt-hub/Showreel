@@ -3,208 +3,593 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saran Selvakumar | VFX Showreel</title>
-
+<title>Saran Selvakumar | Compositing Artist</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+:root {
+  --bg:   #060606;
+  --card: #111111;
+  --rust: #c93a28;
+  --white:#f5f5f5;
+  --line: rgba(255,255,255,0.08);
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #0f0f0f;
-    color: #fff;
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
+
+#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+body::before {
+  content: ""; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.8;
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: #111;
-    border-bottom: 1px solid #222;
-}
+/* MARQUEE */
+.marquee-strip { background: var(--rust); overflow: hidden; padding: 10px 0; position: relative; z-index: 10; }
+.marquee-inner { display: flex; animation: marquee 22s linear infinite; white-space: nowrap; }
+.marquee-inner span { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #fff; text-transform: uppercase; padding: 0 40px; }
+.marquee-inner span::after { content: "◆"; margin-left: 40px; opacity: 0.5; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-.navbar h1 {
-    font-size: 20px;
-}
+.page { max-width: 1200px; margin: 0 auto; padding: 0 60px 100px; position: relative; z-index: 2; }
 
-.navbar a {
-    color: #aaa;
-    text-decoration: none;
-    margin-left: 20px;
-    font-size: 14px;
+/* SECTION LABEL */
+.section-label {
+  font-family: 'Space Mono', monospace; font-size: 15px;
+  letter-spacing: 0.28em; text-transform: uppercase; color: var(--white);
+  display: flex; align-items: center; gap: 14px; margin-bottom: 36px;
 }
+.section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); max-width: 60px; }
 
-.navbar a:hover {
-    color: #fff;
-}
-
-/* Container */
-.container {
-    max-width: 1000px;
-    margin: auto;
-    padding: 40px 20px;
-}
-
-/* Hero Section */
+/* ══════════════════════
+   1. HERO
+══════════════════════ */
 .hero {
-    text-align: center;
-    margin-bottom: 50px;
+  display: grid; grid-template-columns: 1fr clamp(220px, 30%, 420px); gap: 0;
+  border-bottom: 1px solid var(--line); padding: 80px 0 0;
+}
+.hero-text { padding-bottom: 60px; padding-right: 60px; border-right: 1px solid var(--line); }
+
+.eyebrow {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust);
+  margin-bottom: 28px; display: flex; align-items: center; gap: 12px;
+}
+.eyebrow::before { content: ""; display: block; width: 32px; height: 1px; background: var(--rust); }
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 10vw, 120px);
+  line-height: 0.9; letter-spacing: 0.02em; color: var(--white); margin-bottom: 6px;
+}
+h1 .line2 { display: block; color: var(--rust); }
+
+.role-tag {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--white); margin-top: 20px; margin-bottom: 28px;
 }
 
-.hero h2 {
-    font-size: 36px;
+/* contact row */
+.contact-row {
+  display: flex; flex-wrap: wrap; gap: 16px 28px;
+  margin-bottom: 36px;
+}
+.contact-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.1em; color: var(--white); text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-item:hover { color: var(--rust); }
+.contact-item svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.6; }
+
+.cv-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 30px; background: transparent; color: var(--white);
+  text-decoration: none; font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2); transition: all 0.25s ease;
+}
+.cv-btn:hover { background: var(--rust); border-color: var(--rust); }
+.cv-btn svg { width: 14px; height: 14px; }
+
+.hero-photo {
+  padding-left: 50px; padding-bottom: 60px;
+  display: flex; flex-direction: column; justify-content: center;
+  min-width: 0;
+}
+.photo-frame { position: relative; width: 100%; max-width: 100%; }
+.photo-frame::before {
+  content: ""; position: absolute; top: -12px; right: -12px;
+  width: 100%; height: 100%; border: 2px solid var(--rust); z-index: 0;
+}
+.photo-frame img {
+  width: 100%; height: auto; display: block; position: relative; z-index: 1;
+  filter: grayscale(20%) contrast(1.08) brightness(0.92);
+  object-fit: cover;
+}
+.photo-index { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.2em; margin-top: 16px; text-align: right; opacity: 0.45; }
+
+/* ══════════════════════
+   2. ABOUT
+══════════════════════ */
+.about-section {
+  padding: 70px 0; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 260px 1fr; gap: 70px; align-items: start;
+}
+.about-body { font-size: 16px; font-weight: 300; color: var(--white); line-height: 2; opacity: 0.75; }
+.about-body strong { color: var(--white); font-weight: 600; opacity: 1; }
+
+/* ══════════════════════
+   3. SHOWREEL
+══════════════════════ */
+.showreel-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
+.showreel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
+.showreel-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 7vw, 72px); line-height: 1; letter-spacing: 0.04em; color: var(--white); }
+.showreel-note { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.15em; text-transform: uppercase; padding-bottom: 6px; opacity: 0.5; }
+
+.video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000; border: 1px solid var(--line); }
+.video-wrapper::after { content: ""; position: absolute; top: 12px; left: 12px; width: 24px; height: 24px; border-top: 2px solid var(--rust); border-left: 2px solid var(--rust); z-index: 3; pointer-events: none; }
+.video-corner-br { position: absolute; bottom: 12px; right: 12px; width: 24px; height: 24px; border-bottom: 2px solid var(--rust); border-right: 2px solid var(--rust); z-index: 3; pointer-events: none; }
+.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.showreel-desc {
+  margin-top: 20px;
+  font-size: 13px; font-weight: 300; color: var(--white);
+  font-family: 'Space Mono', monospace; line-height: 1.8; opacity: 0.6;
+  border-left: 2px solid var(--rust); padding-left: 18px;
 }
 
-.hero p {
-    color: #aaa;
-    margin-top: 10px;
+/* ══════════════════════
+   4. PROJECTS
+══════════════════════ */
+.projects-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
+
+.projects-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+
+.project-card {
+  background: var(--card); padding: 36px 32px;
+  position: relative; overflow: hidden;
+  transition: background 0.3s ease;
+}
+.project-card::before {
+  content: ""; position: absolute; top: 0; left: 0;
+  width: 3px; height: 0;
+  background: var(--rust);
+  transition: height 0.35s ease;
+}
+.project-card:hover { background: #161616; }
+.project-card:hover::before { height: 100%; }
+
+.project-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 52px;
+  color: var(--rust); line-height: 1; opacity: 0.18;
+  margin-bottom: 16px;
+}
+.project-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+  letter-spacing: 0.04em; color: var(--white);
+  margin-bottom: 18px; line-height: 1.15;
+}
+.project-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.project-points li {
+  font-size: 13px; font-weight: 300; color: var(--white); line-height: 1.7; opacity: 0.7;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.project-points li::before { content: "–"; color: var(--rust); flex-shrink: 0; margin-top: 1px; opacity: 1; }
+
+/* ══════════════════════
+   5. SKILLS + SOFTWARE
+══════════════════════ */
+.skills-software {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-bottom: 1px solid var(--line);
+}
+.ss-cell { padding: 70px 0; }
+.ss-cell:first-child { padding-right: 60px; border-right: 1px solid var(--line); }
+.ss-cell:last-child  { padding-left: 60px; }
+
+/* skill categories */
+.skill-category { margin-bottom: 30px; }
+.skill-category:last-child { margin-bottom: 0; }
+
+.skill-cat-name {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--rust); margin-bottom: 10px;
+}
+.skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-tag {
+  font-size: 12px; font-weight: 300; color: var(--white);
+  padding: 5px 12px; border: 1px solid rgba(255,255,255,0.15);
+  background: var(--card); letter-spacing: 0.04em;
+  transition: all 0.2s ease; cursor: default; opacity: 0.75;
+}
+.skill-tag:hover { border-color: var(--rust); color: var(--white); opacity: 1; }
+
+/* software grid */
+.sw-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.sw-item {
+  aspect-ratio: 1; background: var(--card);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  border: 1px solid var(--line); position: relative; overflow: hidden;
+  cursor: default; transition: border-color 0.25s ease;
+}
+.sw-item img { width: 64px; height: 64px; position: relative; z-index: 1; object-fit: contain; }
+.sw-item .sw-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); position: relative; z-index: 1; text-align: center; padding: 0 6px; opacity: 0.5; }
+
+/* ══════════════════════
+   6. EDUCATION
+══════════════════════ */
+.edu-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
+.edu-card {
+  display: grid; grid-template-columns: auto 1px 1fr; gap: 50px;
+  align-items: center; background: var(--card);
+  border: 1px solid var(--line); padding: 48px 54px;
+  position: relative; overflow: hidden;
+}
+.edu-card::before { content: ""; position: absolute; top: 0; right: 0; width: 120px; height: 120px; border-top: 2px solid var(--rust); border-right: 2px solid var(--rust); opacity: 0.3; }
+.edu-year { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--rust); line-height: 1; white-space: nowrap; }
+.edu-divider { width: 1px; height: 80px; background: var(--line); }
+.edu-degree { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--white); letter-spacing: 0.04em; line-height: 1.15; margin-bottom: 8px; }
+.edu-school { font-size: 14px; font-weight: 300; color: var(--white); margin-bottom: 8px; opacity: 0.6; }
+.edu-note { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--white); text-transform: uppercase; opacity: 0.4; }
+
+/* FOOTER */
+.footer { padding-top: 50px; display: flex; align-items: center; justify-content: space-between; }
+.footer-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.1em; color: var(--white); opacity: 0.18; }
+.footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.35; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+.hero             { animation: fadeUp 0.7s 0.0s ease both; }
+.about-section    { animation: fadeUp 0.7s 0.1s ease both; }
+.showreel-section { animation: fadeUp 0.7s 0.2s ease both; }
+.projects-section { animation: fadeUp 0.7s 0.25s ease both; }
+.skills-software  { animation: fadeUp 0.7s 0.3s ease both; }
+.edu-section      { animation: fadeUp 0.7s 0.4s ease both; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 4 BREAKPOINTS
+══════════════════════════════════════ */
+
+/* ── Large desktop (1200px+) already handled by .page max-width ── */
+
+/* ── Medium desktop / laptop: 900px – 1199px ── */
+@media (max-width: 1199px) {
+  .page { padding: 0 40px 100px; }
+  h1 { font-size: clamp(64px, 9vw, 100px); }
+  .hero { grid-template-columns: 1fr clamp(220px, 28%, 340px); }
+  .hero-text { padding-right: 40px; }
+  .hero-photo { padding-left: 40px; }
+  .projects-grid { grid-template-columns: repeat(3,1fr); }
 }
 
-/* Video */
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 10px;
-    margin-top: 30px;
+/* ── Tablet: 700px – 899px ── */
+@media (max-width: 899px) {
+  .page { padding: 0 32px 80px; }
+  h1 { font-size: clamp(54px, 12vw, 80px); }
+
+  /* hero stacks but photo stays reasonable size */
+  .hero { grid-template-columns: 1fr; padding-top: 50px; }
+  .hero-text {
+    border-right: none; border-bottom: 1px solid var(--line);
+    padding-right: 0; padding-bottom: 50px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .eyebrow { justify-content: center; }
+  .eyebrow::before { display: none; }
+  .role-tag { text-align: center; }
+  .contact-row { justify-content: center; }
+  .hero-photo {
+    padding-left: 0; padding-top: 50px; padding-bottom: 50px;
+    align-items: center;
+  }
+  .photo-frame { width: min(340px, 70%); }
+
+  /* about */
+  .about-section { grid-template-columns: 1fr; gap: 0; text-align: center; }
+  .about-section .section-label { justify-content: center; }
+  .about-section .section-label::after { display: none; }
+  .about-body { text-align: center; }
+
+  /* showreel */
+  .showreel-header { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+  .showreel-section .section-label { justify-content: center; }
+  .showreel-section .section-label::after { display: none; }
+
+  /* projects — 2 col on tablet */
+  .projects-grid { grid-template-columns: repeat(2,1fr); }
+  .projects-section .section-label { justify-content: center; }
+  .projects-section .section-label::after { display: none; }
+
+  /* skills/software stack */
+  .skills-software { grid-template-columns: 1fr; }
+  .ss-cell { text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .ss-cell:first-child { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 50px; }
+  .ss-cell:last-child { padding-left: 0; }
+  .ss-cell .section-label { justify-content: center; }
+  .ss-cell .section-label::after { display: none; }
+  .skill-tags { justify-content: center; }
+  .sw-grid { max-width: 360px; width: 100%; }
+
+  /* education */
+  .edu-section .section-label { justify-content: center; }
+  .edu-section .section-label::after { display: none; }
+  .edu-card { grid-template-columns: 1fr; gap: 16px; padding: 40px 36px; text-align: center; justify-items: center; }
+  .edu-divider { display: none; }
+
+  .footer { flex-direction: column; gap: 12px; align-items: center; text-align: center; }
 }
 
-.video-container iframe {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+/* ── Mobile: up to 699px ── */
+@media (max-width: 699px) {
+  .page { padding: 0 20px 60px; }
+  h1 { font-size: clamp(48px, 14vw, 68px); }
+
+  .hero { padding-top: 36px; }
+  .hero-text { padding-bottom: 36px; }
+  .contact-row { flex-direction: column; align-items: center; gap: 12px; }
+  .photo-frame { width: min(260px, 80%); }
+
+  /* projects — single col on mobile */
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card { padding: 28px 24px; }
+
+  .sw-grid { grid-template-columns: repeat(3,1fr); max-width: 100%; }
+  .sw-item img { width: 44px; height: 44px; }
+
+  .edu-card { padding: 28px 20px; }
+  .edu-year { font-size: 38px; }
+
+  .showreel-title { font-size: clamp(36px, 10vw, 52px); }
 }
 
-/* Sections */
-.section {
-    margin-top: 60px;
-}
-
-.section h3 {
-    margin-bottom: 15px;
-    font-size: 22px;
-    border-left: 3px solid #00bcd4;
-    padding-left: 10px;
-}
-
-/* About */
-.about p {
-    color: #bbb;
-    line-height: 1.6;
-}
-
-/* Skills */
-.skills {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.skills span {
-    background: #1f1f1f;
-    padding: 8px 12px;
-    margin: 6px;
-    border-radius: 5px;
-    font-size: 13px;
-}
-
-/* Links */
-.links a {
-    display: inline-block;
-    margin-right: 15px;
-    color: #00bcd4;
-    text-decoration: none;
-}
-
-.links a:hover {
-    text-decoration: underline;
-}
-
-/* Footer */
-.footer {
-    text-align: center;
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid #222;
-    color: #777;
-    font-size: 14px;
+/* ── Small mobile: up to 400px ── */
+@media (max-width: 400px) {
+  .page { padding: 0 16px 50px; }
+  h1 { font-size: 48px; }
+  .sw-grid { grid-template-columns: repeat(2,1fr); }
+  .sw-item img { width: 38px; height: 38px; }
+  .project-card { padding: 22px 18px; }
 }
 </style>
-
 </head>
-
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-    <h1>Saran</h1>
+<canvas id="particles"></canvas>
+
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Compositing Artist</span><span>Keying &amp; Rotoscoping</span>
+    <span>Colour Grading</span><span>VFX Pipeline</span><span>Multi-Pass CG</span>
+    <span>Nuke · After Effects · Maya</span>
+    <span>Compositing Artist</span><span>Keying &amp; Rotoscoping</span>
+    <span>Colour Grading</span><span>VFX Pipeline</span><span>Multi-Pass CG</span>
+    <span>Nuke · After Effects · Maya</span>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ① HERO -->
+  <div class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Portfolio</div>
+      <h1>Saran<span class="line2">Selvakumar</span></h1>
+      <div class="role-tag">Compositing Artist</div>
+
+      <div class="contact-row">
+        <a href="mailto:sarans24@hotmail.com" class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          sarans24@hotmail.com
+        </a>
+        <a href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          linkedin.com/in/saran-s
+        </a>
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Pune, Maharashtra, India
+        </span>
+      </div>
+
+      <a href="saran_resume_check.pdf" class="cv-btn" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CV
+      </a>
+    </div>
+
+    <div class="hero-photo">
+      <div class="photo-frame">
+        <img src="DP.jpg" alt="Saran Selvakumar">
+      </div>
+      <div class="photo-index">001 / PORTRAIT</div>
+    </div>
+  </div>
+
+  <!-- ② ABOUT -->
+  <div class="about-section">
+    <div><div class="section-label">02 / About</div></div>
+    <p class="about-body">
+      Compositing Artist currently pursuing a Bachelor's degree at <strong>Dr. D. Y. Patil Vidyapeeth</strong>,
+      with hands-on training in VFX pipelines, <strong>digital compositing</strong>, and post-production workflows.
+      Technically grounded in industry-standard tools with a strong eye for detail and a commitment to delivering
+      <strong>seamless, high-quality visual output</strong>.
+    </p>
+  </div>
+
+  <!-- ③ SHOWREEL -->
+ <div class="showreel-section">
+  <div class="showreel-header">
     <div>
-        <a href="#">Showreel</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+      <div class="section-label">03 / Reel</div>
+      <div class="showreel-title">Showreel</div>
     </div>
+    <div class="showreel-note">2025 Demo Reel</div>
+  </div>
+
+  <div class="video-wrapper">
+    <div class="video-corner-br"></div>
+
+    <iframe 
+      width="100%" 
+      height="500" 
+      src="https://www.youtube.com/embed/qanbRsALPKY"
+      title="Showreel Video"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+  <p class="showreel-desc">
+    Green-screen compositing · Paint prep work · Multi-pass CG compositing —
+    demonstrating keying precision, cleanup accuracy, and seamless integration techniques.
+  </p>
 </div>
 
-<div class="container">
+  <!-- ④ PROJECTS -->
+  <div class="projects-section">
+    <div class="section-label">04 / Personal Projects</div>
+    <div class="projects-grid">
 
-    <!-- Hero -->
-    <div class="hero">
-        <h2>Saran Selvakumar</h2>
-        <p>Compositing Artist</p>
+      <div class="project-card">
+        <div class="project-num">01</div>
+        <div class="project-title">Green-Screen Integration Shot</div>
+        <ul class="project-points">
+          <li>Keying, edge refinement, despill, and colour matching for seamless CG background integration</li>
+          <li>Balanced lighting and depth to achieve realistic foreground-background interaction</li>
+        </ul>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">02</div>
+        <div class="project-title">Paint Prep & Clean Plate Work</div>
+        <ul class="project-points">
+          <li>Wire removal, object cleanup, and background reconstruction using paint and clone techniques</li>
+          <li>Ensured frame-by-frame consistency and motion continuity</li>
+        </ul>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">03</div>
+        <div class="project-title">Multi-Pass CG Compositing</div>
+        <ul class="project-points">
+          <li>Integrated beauty, shadow, reflection, and AO passes in a node-based workflow</li>
+          <li>Applied final grade and grain to match live-action footage for photorealistic output</li>
+        </ul>
+      </div>
+
     </div>
+  </div>
 
-    <!-- Showreel -->
-    <div class="section">
-        <h3>Showreel</h3>
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+  <!-- ⑤ SKILLS + SOFTWARE -->
+  <div class="skills-software">
+    <div class="ss-cell">
+      <div class="section-label">05 / Core Skills</div>
+
+      <div class="skill-category">
+        <div class="skill-cat-name">Compositing</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Keying</span>
+          <span class="skill-tag">Rotoscoping</span>
+          <span class="skill-tag">Layer Management</span>
+          <span class="skill-tag">Multi-Pass CG Integration</span>
         </div>
-    </div>
+      </div>
 
-    <!-- About -->
-    <div class="section about">
-        <h3>About</h3>
-        <p>
-            Compositing Artist with hands-on experience in VFX pipelines, digital compositing, 
-            and post-production workflows. Skilled in keying, rotoscoping, and multi-pass integration, 
-            with a strong focus on achieving seamless and realistic visual output.
-        </p>
-    </div>
-
-    <!-- Skills -->
-    <div class="section">
-        <h3>Skills</h3>
-        <div class="skills">
-            <span>Nuke</span>
-            <span>After Effects</span>
-            <span>Photoshop</span>
-            <span>Premiere Pro</span>
-            <span>Maya</span>
-            <span>Blender</span>
-            <span>Keying</span>
-            <span>Rotoscoping</span>
-            <span>Compositing</span>
+      <div class="skill-category">
+        <div class="skill-cat-name">Colour</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Colour Correction</span>
+          <span class="skill-tag">Grading</span>
+          <span class="skill-tag">Look Development</span>
+          <span class="skill-tag">Grain & Motion Blur Matching</span>
         </div>
+      </div>
+
+      <div class="skill-category">
+        <div class="skill-cat-name">VFX Pipeline</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Pre-Production to Delivery</span>
+          <span class="skill-tag">Render Pass Management</span>
+          <span class="skill-tag">Client-Ready Output</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Contact -->
-    <div class="section links">
-        <h3>Contact</h3>
-        <a href="https://vfx-showreel.sarans24.workers.dev/" target="_blank">Portfolio</a>
-        <a href="https://linkedin.com/in/saran-s-8691343b1" target="_blank">LinkedIn</a>
-        <a href="mailto:saranstmpt.com">Email</a>
+    <div class="ss-cell">
+      <div class="section-label">06 / Software</div>
+      <div class="sw-grid">
+        <div class="sw-item"><img src="nuke.png" alt="Nuke"><span class="sw-label">Nuke</span></div>
+        <div class="sw-item"><img src="after-effects.png" alt="After Effects"><span class="sw-label">After Effects</span></div>
+        <div class="sw-item"><img src="photoshop.png" alt="Photoshop"><span class="sw-label">Photoshop</span></div>
+        <div class="sw-item"><img src="maya.png" alt="Maya"><span class="sw-label">Maya</span></div>
+        <div class="sw-item"><img src="blender.png" alt="Blender"><span class="sw-label">Blender</span></div>
+        <div class="sw-item"><img src="premiere-pro.png" alt="Premiere Pro"><span class="sw-label">Premiere</span></div>
+      </div>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        © 2026 Saran Selvakumar
+  <!-- ⑥ EDUCATION -->
+  <div class="edu-section">
+    <div class="section-label">07 / Education</div>
+    <div class="edu-card">
+      <div class="edu-year">2023 — 2026</div>
+      <div class="edu-divider"></div>
+      <div class="edu-info">
+        <div class="edu-degree">Visual Effects, Animation & Compositing</div>
+        <div class="edu-school">Dr. D. Y. Patil Vidyapeeth · Pune, Maharashtra</div>
+        <div class="edu-note">Bachelor's Degree · In Progress · Aug 2023 – Jun 2026</div>
+      </div>
     </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-name">Saran Selvakumar</div>
+    <div class="footer-copy">Compositing Artist · Portfolio</div>
+  </div>
 
 </div>
+
+<script>
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, pool = [];
+function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', ()=>{ resize(); build(); });
+function rand(a,b){ return a + Math.random()*(b-a); }
+
+class Dot {
+  constructor(){ this.spawn(true); }
+  spawn(init){ this.x=rand(0,W); this.y=init?rand(0,H):H+6; this.r=rand(0.3,1.4); this.vy=rand(0.1,0.45); this.vx=rand(-0.08,0.08); this.a=rand(0.06,0.38); this.t=0; this.T=rand(280,700); }
+  step(){ this.x+=this.vx; this.y-=this.vy; this.t++; const p=this.t/this.T; this.o=p<.15?(p/.15)*this.a:p>.75?((1-p)/.25)*this.a:this.a; if(this.t>=this.T||this.y<-8)this.spawn(); }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${this.o})`; ctx.fill(); }
+}
+class Streak {
+  constructor(){ this.spawn(true); }
+  spawn(init){ this.x=rand(0,W); this.y=init?rand(0,H):H+40; this.len=rand(35,110); this.vy=rand(0.18,0.55); this.a=rand(0.025,0.09); this.t=0; this.T=rand(350,900); }
+  step(){ this.y-=this.vy; this.t++; const p=this.t/this.T; this.o=p<.12?(p/.12)*this.a:p>.8?((1-p)/.2)*this.a:this.a; if(this.t>=this.T||this.y<-this.len)this.spawn(); }
+  draw(){ const g=ctx.createLinearGradient(this.x,this.y,this.x,this.y+this.len); g.addColorStop(0,`rgba(255,255,255,0)`); g.addColorStop(.45,`rgba(255,255,255,${this.o})`); g.addColorStop(1,`rgba(255,255,255,0)`); ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x,this.y+this.len); ctx.strokeStyle=g; ctx.lineWidth=0.7; ctx.stroke(); }
+}
+class Scan {
+  constructor(){ this.spawn(true); }
+  spawn(init){ this.y=init?rand(0,H):-2; this.x=rand(0,W*0.6); this.w=rand(60,220); this.vy=rand(0.3,1.0); this.a=rand(0.015,0.06); this.t=0; this.T=rand(200,600); }
+  step(){ this.y+=this.vy; this.t++; const p=this.t/this.T; this.o=p<.1?(p/.1)*this.a:p>.8?((1-p)/.2)*this.a:this.a; if(this.t>=this.T||this.y>H+4)this.spawn(); }
+  draw(){ const g=ctx.createLinearGradient(this.x,this.y,this.x+this.w,this.y); g.addColorStop(0,`rgba(255,255,255,0)`); g.addColorStop(.5,`rgba(255,255,255,${this.o})`); g.addColorStop(1,`rgba(255,255,255,0)`); ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.w,this.y); ctx.strokeStyle=g; ctx.lineWidth=0.6; ctx.stroke(); }
+}
+
+function build(){ pool=[]; for(let i=0;i<130;i++) pool.push(new Dot()); for(let i=0;i<35;i++) pool.push(new Streak()); for(let i=0;i<20;i++) pool.push(new Scan()); }
+build();
+(function loop(){ ctx.clearRect(0,0,W,H); pool.forEach(p=>{ p.step(); p.draw(); }); requestAnimationFrame(loop); })();
+</script>
 
 </body>
 </html>
