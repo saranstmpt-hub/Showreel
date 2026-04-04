@@ -17,7 +17,101 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; cursor: none; }
+
+/* ══════════════════════
+   LOADER / INTRO
+══════════════════════ */
+#loader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: #060606;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: all;
+}
+
+/* two panels that split open */
+#loader-top, #loader-bot {
+  position: absolute; left: 0; right: 0; height: 50%;
+  background: #060606;
+  transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
+}
+#loader-top { top: 0; transform-origin: top; }
+#loader-bot { bottom: 0; transform-origin: bottom; }
+#loader.split #loader-top { transform: translateY(-100%); }
+#loader.split #loader-bot { transform: translateY(100%); }
+
+/* center content */
+#loader-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 24px;
+}
+
+.loader-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 10vw, 100px);
+  letter-spacing: 0.06em;
+  color: var(--white);
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: loaderNameIn 0.6s 0.1s ease forwards;
+}
+.loader-name span { color: var(--rust); }
+
+@keyframes loaderNameIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loader-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--white); opacity: 0;
+  animation: loaderNameIn 0.5s 0.35s ease forwards;
+}
+
+/* progress bar */
+.loader-bar-wrap {
+  width: clamp(200px, 40vw, 340px); height: 1px;
+  background: rgba(255,255,255,0.1);
+  position: relative; overflow: hidden;
+  opacity: 0; animation: loaderNameIn 0.4s 0.5s ease forwards;
+}
+.loader-bar-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--rust); width: 0%;
+  transition: width 0.05s linear;
+}
+
+/* counter */
+.loader-counter {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.2em; color: var(--rust);
+  opacity: 0; animation: loaderNameIn 0.4s 0.5s ease forwards;
+}
+
+/* diagonal slash decoration */
+.loader-slash {
+  position: absolute; font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(120px, 25vw, 260px); color: rgba(201,58,40,0.04);
+  letter-spacing: -0.05em; user-select: none; pointer-events: none;
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  white-space: nowrap;
+}
+
+/* page hidden until loader gone */
+body.loading .page,
+body.loading .marquee-strip { opacity: 0; }
+body.loading { overflow: hidden; }
+body.loaded .page,
+body.loaded .marquee-strip {
+  opacity: 1;
+  transition: opacity 0.5s ease 0.1s;
+}
+
+/* CUSTOM CURSOR */
+#cursor { position: fixed; width: 10px; height: 10px; background: var(--rust); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: transform 0.1s ease, background 0.2s ease; mix-blend-mode: normal; }
+#cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(201,58,40,0.5); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease; }
+body:hover #cursor-ring { opacity: 1; }
 
 #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 
@@ -43,6 +137,17 @@ body::before {
   display: flex; align-items: center; gap: 14px; margin-bottom: 36px;
 }
 .section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); max-width: 60px; }
+
+/* REVEAL ANIMATION */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* ══════════════════════
    1. HERO
@@ -71,7 +176,10 @@ h1 .line2 { display: block; color: var(--rust); }
   font-family: 'Space Mono', monospace; font-size: 12px;
   letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--white); margin-top: 20px; margin-bottom: 28px;
+  min-height: 1.5em;
 }
+.role-tag .cursor-blink { display: inline-block; width: 2px; height: 1em; background: var(--rust); margin-left: 3px; vertical-align: middle; animation: blink 0.9s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 /* contact row */
 .contact-row {
@@ -82,7 +190,7 @@ h1 .line2 { display: block; color: var(--rust); }
   display: flex; align-items: center; gap: 8px;
   font-family: 'Space Mono', monospace; font-size: 10px;
   letter-spacing: 0.1em; color: var(--white); text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.2s; cursor: none;
 }
 .contact-item:hover { color: var(--rust); }
 .contact-item svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.6; }
@@ -93,8 +201,16 @@ h1 .line2 { display: block; color: var(--rust); }
   text-decoration: none; font-family: 'Space Mono', monospace;
   font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
   border: 1px solid rgba(255,255,255,0.2); transition: all 0.25s ease;
+  cursor: none; position: relative; overflow: hidden;
 }
-.cv-btn:hover { background: var(--rust); border-color: var(--rust); }
+.cv-btn::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--rust); transform: translateX(-101%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.cv-btn:hover::before { transform: translateX(0); }
+.cv-btn:hover { border-color: var(--rust); }
+.cv-btn span, .cv-btn svg { position: relative; z-index: 1; }
 .cv-btn svg { width: 14px; height: 14px; }
 
 .hero-photo {
@@ -106,33 +222,31 @@ h1 .line2 { display: block; color: var(--rust); }
 .photo-frame::before {
   content: ""; position: absolute; top: -12px; right: -12px;
   width: 100%; height: 100%; border: 2px solid var(--rust); z-index: 0;
+  transition: top 0.3s ease, right 0.3s ease;
 }
+.photo-frame:hover::before { top: -18px; right: -18px; }
 .photo-frame img {
   width: 100%; height: auto; display: block; position: relative; z-index: 1;
   filter: grayscale(20%) contrast(1.08) brightness(0.92);
-  object-fit: cover;
+  object-fit: cover; transition: filter 0.4s ease;
 }
+.photo-frame:hover img { filter: grayscale(0%) contrast(1.05) brightness(0.95); }
 .photo-index { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.2em; margin-top: 16px; text-align: right; opacity: 0.45; }
 
 /* ══════════════════════
-   2. ABOUT
-══════════════════════ */
-.about-section {
-  padding: 70px 0; border-bottom: 1px solid var(--line);
-  display: grid; grid-template-columns: 260px 1fr; gap: 70px; align-items: start;
-}
-.about-body { font-size: 16px; font-weight: 300; color: var(--white); line-height: 2; opacity: 0.75; }
-.about-body strong { color: var(--white); font-weight: 600; opacity: 1; }
-
-/* ══════════════════════
-   3. SHOWREEL
+   2. SHOWREEL
 ══════════════════════ */
 .showreel-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
 .showreel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
 .showreel-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 7vw, 72px); line-height: 1; letter-spacing: 0.04em; color: var(--white); }
 .showreel-note { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.15em; text-transform: uppercase; padding-bottom: 6px; opacity: 0.5; }
 
-.video-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000; border: 1px solid var(--line); }
+.video-wrapper {
+  position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden;
+  background: #000; border: 1px solid var(--line);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.video-wrapper:hover { border-color: rgba(201,58,40,0.4); box-shadow: 0 0 40px rgba(201,58,40,0.08); }
 .video-wrapper::after { content: ""; position: absolute; top: 12px; left: 12px; width: 24px; height: 24px; border-top: 2px solid var(--rust); border-left: 2px solid var(--rust); z-index: 3; pointer-events: none; }
 .video-corner-br { position: absolute; bottom: 12px; right: 12px; width: 24px; height: 24px; border-bottom: 2px solid var(--rust); border-right: 2px solid var(--rust); z-index: 3; pointer-events: none; }
 .video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
@@ -145,85 +259,37 @@ h1 .line2 { display: block; color: var(--rust); }
 }
 
 /* ══════════════════════
-   4. PROJECTS
+   3. SKILLS (Software only, expanded)
 ══════════════════════ */
-.projects-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
+.skills-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
 
-.projects-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.sw-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px; background: var(--line);
+  border: 1px solid var(--line);
+}
 
-.project-card {
-  background: var(--card); padding: 36px 32px;
-  position: relative; overflow: hidden;
-  transition: background 0.3s ease;
-}
-.project-card::before {
-  content: ""; position: absolute; top: 0; left: 0;
-  width: 3px; height: 0;
-  background: var(--rust);
-  transition: height 0.35s ease;
-}
-.project-card:hover { background: #161616; }
-.project-card:hover::before { height: 100%; }
-
-.project-num {
-  font-family: 'Bebas Neue', sans-serif; font-size: 52px;
-  color: var(--rust); line-height: 1; opacity: 0.18;
-  margin-bottom: 16px;
-}
-.project-title {
-  font-family: 'Bebas Neue', sans-serif; font-size: 26px;
-  letter-spacing: 0.04em; color: var(--white);
-  margin-bottom: 18px; line-height: 1.15;
-}
-.project-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.project-points li {
-  font-size: 13px; font-weight: 300; color: var(--white); line-height: 1.7; opacity: 0.7;
-  display: flex; gap: 10px; align-items: flex-start;
-}
-.project-points li::before { content: "–"; color: var(--rust); flex-shrink: 0; margin-top: 1px; opacity: 1; }
-
-/* ══════════════════════
-   5. SKILLS + SOFTWARE
-══════════════════════ */
-.skills-software {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-  border-bottom: 1px solid var(--line);
-}
-.ss-cell { padding: 70px 0; }
-.ss-cell:first-child { padding-right: 60px; border-right: 1px solid var(--line); }
-.ss-cell:last-child  { padding-left: 60px; }
-
-/* skill categories */
-.skill-category { margin-bottom: 30px; }
-.skill-category:last-child { margin-bottom: 0; }
-
-.skill-cat-name {
-  font-family: 'Space Mono', monospace; font-size: 10px;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--rust); margin-bottom: 10px;
-}
-.skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.skill-tag {
-  font-size: 12px; font-weight: 300; color: var(--white);
-  padding: 5px 12px; border: 1px solid rgba(255,255,255,0.15);
-  background: var(--card); letter-spacing: 0.04em;
-  transition: all 0.2s ease; cursor: default; opacity: 0.75;
-}
-.skill-tag:hover { border-color: var(--rust); color: var(--white); opacity: 1; }
-
-/* software grid */
-.sw-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
 .sw-item {
   aspect-ratio: 1; background: var(--card);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-  border: 1px solid var(--line); position: relative; overflow: hidden;
-  cursor: default; transition: border-color 0.25s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  position: relative; overflow: hidden;
+  cursor: none; transition: background 0.3s ease;
 }
-.sw-item img { width: 64px; height: 64px; position: relative; z-index: 1; object-fit: contain; }
-.sw-item .sw-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); position: relative; z-index: 1; text-align: center; padding: 0 6px; opacity: 0.5; }
+.sw-item::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--rust); opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.sw-item:hover { background: #161616; }
+.sw-item:hover::before { opacity: 0.04; }
+.sw-item img { width: 64px; height: 64px; position: relative; z-index: 1; object-fit: contain; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.sw-item:hover img { transform: scale(1.12); }
+.sw-item .sw-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); position: relative; z-index: 1; text-align: center; padding: 0 6px; opacity: 0.5; transition: opacity 0.2s; }
+.sw-item:hover .sw-label { opacity: 0.9; }
 
 /* ══════════════════════
-   6. EDUCATION
+   4. EDUCATION
 ══════════════════════ */
 .edu-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
 .edu-card {
@@ -231,8 +297,11 @@ h1 .line2 { display: block; color: var(--rust); }
   align-items: center; background: var(--card);
   border: 1px solid var(--line); padding: 48px 54px;
   position: relative; overflow: hidden;
+  transition: border-color 0.3s ease;
 }
-.edu-card::before { content: ""; position: absolute; top: 0; right: 0; width: 120px; height: 120px; border-top: 2px solid var(--rust); border-right: 2px solid var(--rust); opacity: 0.3; }
+.edu-card::before { content: ""; position: absolute; top: 0; right: 0; width: 120px; height: 120px; border-top: 2px solid var(--rust); border-right: 2px solid var(--rust); opacity: 0.3; transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease; }
+.edu-card:hover { border-color: rgba(201,58,40,0.25); }
+.edu-card:hover::before { opacity: 0.7; width: 160px; height: 160px; }
 .edu-year { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--rust); line-height: 1; white-space: nowrap; }
 .edu-divider { width: 1px; height: 80px; background: var(--line); }
 .edu-degree { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--white); letter-spacing: 0.04em; line-height: 1.15; margin-bottom: 8px; }
@@ -244,123 +313,87 @@ h1 .line2 { display: block; color: var(--rust); }
 .footer-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.1em; color: var(--white); opacity: 0.18; }
 .footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.35; }
 
-/* ANIMATIONS */
+/* HERO ENTRY ANIMATION */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-.hero             { animation: fadeUp 0.7s 0.0s ease both; }
-.about-section    { animation: fadeUp 0.7s 0.1s ease both; }
-.showreel-section { animation: fadeUp 0.7s 0.2s ease both; }
-.projects-section { animation: fadeUp 0.7s 0.25s ease both; }
-.skills-software  { animation: fadeUp 0.7s 0.3s ease both; }
-.edu-section      { animation: fadeUp 0.7s 0.4s ease both; }
+.hero { animation: fadeUp 0.8s 0.0s ease both; }
 
 /* ══════════════════════════════════════
-   RESPONSIVE — 4 BREAKPOINTS
+   RESPONSIVE
 ══════════════════════════════════════ */
-
-/* ── Large desktop (1200px+) already handled by .page max-width ── */
-
-/* ── Medium desktop / laptop: 900px – 1199px ── */
 @media (max-width: 1199px) {
   .page { padding: 0 40px 100px; }
   h1 { font-size: clamp(64px, 9vw, 100px); }
   .hero { grid-template-columns: 1fr clamp(220px, 28%, 340px); }
   .hero-text { padding-right: 40px; }
   .hero-photo { padding-left: 40px; }
-  .projects-grid { grid-template-columns: repeat(3,1fr); }
+  .sw-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* ── Tablet: 700px – 899px ── */
 @media (max-width: 899px) {
   .page { padding: 0 32px 80px; }
   h1 { font-size: clamp(54px, 12vw, 80px); }
-
-  /* hero stacks but photo stays reasonable size */
   .hero { grid-template-columns: 1fr; padding-top: 50px; }
-  .hero-text {
-    border-right: none; border-bottom: 1px solid var(--line);
-    padding-right: 0; padding-bottom: 50px;
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-  }
+  .hero-text { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 50px; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .eyebrow { justify-content: center; }
   .eyebrow::before { display: none; }
   .role-tag { text-align: center; }
   .contact-row { justify-content: center; }
-  .hero-photo {
-    padding-left: 0; padding-top: 50px; padding-bottom: 50px;
-    align-items: center;
-  }
+  .hero-photo { padding-left: 0; padding-top: 50px; padding-bottom: 50px; align-items: center; }
   .photo-frame { width: min(340px, 70%); }
-
-  /* about */
-  .about-section { grid-template-columns: 1fr; gap: 0; text-align: center; }
-  .about-section .section-label { justify-content: center; }
-  .about-section .section-label::after { display: none; }
-  .about-body { text-align: center; }
-
-  /* showreel */
   .showreel-header { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
   .showreel-section .section-label { justify-content: center; }
   .showreel-section .section-label::after { display: none; }
-
-  /* projects — 2 col on tablet */
-  .projects-grid { grid-template-columns: repeat(2,1fr); }
-  .projects-section .section-label { justify-content: center; }
-  .projects-section .section-label::after { display: none; }
-
-  /* skills/software stack */
-  .skills-software { grid-template-columns: 1fr; }
-  .ss-cell { text-align: center; display: flex; flex-direction: column; align-items: center; }
-  .ss-cell:first-child { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 50px; }
-  .ss-cell:last-child { padding-left: 0; }
-  .ss-cell .section-label { justify-content: center; }
-  .ss-cell .section-label::after { display: none; }
-  .skill-tags { justify-content: center; }
-  .sw-grid { max-width: 360px; width: 100%; }
-
-  /* education */
+  .skills-section .section-label { justify-content: center; }
+  .skills-section .section-label::after { display: none; }
+  .sw-grid { grid-template-columns: repeat(3,1fr); }
   .edu-section .section-label { justify-content: center; }
   .edu-section .section-label::after { display: none; }
   .edu-card { grid-template-columns: 1fr; gap: 16px; padding: 40px 36px; text-align: center; justify-items: center; }
   .edu-divider { display: none; }
-
   .footer { flex-direction: column; gap: 12px; align-items: center; text-align: center; }
+  body { cursor: auto; }
+  #cursor, #cursor-ring { display: none; }
 }
 
-/* ── Mobile: up to 699px ── */
 @media (max-width: 699px) {
   .page { padding: 0 20px 60px; }
   h1 { font-size: clamp(48px, 14vw, 68px); }
-
   .hero { padding-top: 36px; }
   .hero-text { padding-bottom: 36px; }
   .contact-row { flex-direction: column; align-items: center; gap: 12px; }
   .photo-frame { width: min(260px, 80%); }
-
-  /* projects — single col on mobile */
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card { padding: 28px 24px; }
-
-  .sw-grid { grid-template-columns: repeat(3,1fr); max-width: 100%; }
+  .sw-grid { grid-template-columns: repeat(2,1fr); }
   .sw-item img { width: 44px; height: 44px; }
-
   .edu-card { padding: 28px 20px; }
   .edu-year { font-size: 38px; }
-
   .showreel-title { font-size: clamp(36px, 10vw, 52px); }
 }
 
-/* ── Small mobile: up to 400px ── */
 @media (max-width: 400px) {
   .page { padding: 0 16px 50px; }
   h1 { font-size: 48px; }
   .sw-grid { grid-template-columns: repeat(2,1fr); }
   .sw-item img { width: 38px; height: 38px; }
-  .project-card { padding: 22px 18px; }
 }
 </style>
 </head>
 <body>
 
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <div id="loader-top"></div>
+  <div id="loader-bot"></div>
+  <div class="loader-slash">SS</div>
+  <div id="loader-content">
+    <div class="loader-name">Saran<span>&nbsp;S</span></div>
+    <div class="loader-role">Compositing Artist</div>
+    <div class="loader-bar-wrap"><div class="loader-bar-fill" id="loaderBar"></div></div>
+    <div class="loader-counter" id="loaderCounter">0%</div>
+  </div>
+</div>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 <canvas id="particles"></canvas>
 
 <div class="marquee-strip">
@@ -381,10 +414,10 @@ h1 .line2 { display: block; color: var(--rust); }
     <div class="hero-text">
       <div class="eyebrow">Portfolio</div>
       <h1>Saran<span class="line2">Selvakumar</span></h1>
-      <div class="role-tag">Compositing Artist</div>
+      <div class="role-tag" id="roleTag"><span id="typewriter"></span><span class="cursor-blink"></span></div>
 
       <div class="contact-row">
-        <a href="mailto:sarans24@hotmail.com" class="contact-item">
+        <a href="mailto:saranyes77@gmail.com" class="contact-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
           saranyes77@gmail.com
         </a>
@@ -400,7 +433,7 @@ h1 .line2 { display: block; color: var(--rust); }
 
       <a href="saran_resume_check.pdf" class="cv-btn" download>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download CV
+        <span>Download CV</span>
       </a>
     </div>
 
@@ -412,134 +445,51 @@ h1 .line2 { display: block; color: var(--rust); }
     </div>
   </div>
 
-  <!-- ② ABOUT -->
-  <div class="about-section">
-    <div><div class="section-label">02 / About</div></div>
-    <p class="about-body">
-      Compositing Artist currently pursuing a Bachelor's degree at <strong>Dr. D. Y. Patil Vidyapeeth</strong>,
-      with hands-on training in VFX pipelines, <strong>digital compositing</strong>, and post-production workflows.
-      Technically grounded in industry-standard tools with a strong eye for detail and a commitment to delivering
-      <strong>seamless, high-quality visual output</strong>.
+  <!-- ② SHOWREEL -->
+  <div class="showreel-section reveal">
+    <div class="showreel-header">
+      <div>
+        <div class="section-label">02 / Reel</div>
+        <div class="showreel-title">Showreel</div>
+      </div>
+      <div class="showreel-note">2026 ShowReel</div>
+    </div>
+
+    <div class="video-wrapper">
+      <div class="video-corner-br"></div>
+      <iframe
+        width="100%"
+        height="500"
+        src="https://www.youtube.com/embed/fCmgCloS9O8"
+        title="Showreel Video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <p class="showreel-desc">
+      Green-screen compositing · Paint prep work · Multi-pass CG compositing —
+      demonstrating keying precision, cleanup accuracy, and seamless integration techniques.
     </p>
   </div>
 
-  <!-- ③ SHOWREEL -->
- <div class="showreel-section">
-  <div class="showreel-header">
-    <div>
-      <div class="section-label">03 / Reel</div>
-      <div class="showreel-title">Showreel</div>
-    </div>
-    <div class="showreel-note">2026 ShowReel</div>
-  </div>
-
-  <div class="video-wrapper">
-    <div class="video-corner-br"></div>
-
-<iframe 
-  width="100%" 
-  height="500" 
-  src="https://www.youtube.com/embed/fCmgCloS9O8"
-  title="Showreel Video"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen>
-</iframe>
-
-  </div>
-
-  <p class="showreel-desc">
-    Green-screen compositing · Paint prep work · Multi-pass CG compositing —
-    demonstrating keying precision, cleanup accuracy, and seamless integration techniques.
-  </p>
-</div>
-
-  <!-- ④ PROJECTS -->
-  <div class="projects-section">
-    <div class="section-label">04 / Personal Projects</div>
-    <div class="projects-grid">
-
-      <div class="project-card">
-        <div class="project-num">01</div>
-        <div class="project-title">Green-Screen Integration Shot</div>
-        <ul class="project-points">
-          <li>Keying, edge refinement, despill, and colour matching for seamless CG background integration</li>
-          <li>Balanced lighting and depth to achieve realistic foreground-background interaction</li>
-        </ul>
-      </div>
-
-      <div class="project-card">
-        <div class="project-num">02</div>
-        <div class="project-title">Paint Prep & Clean Plate Work</div>
-        <ul class="project-points">
-          <li>Wire removal, object cleanup, and background reconstruction using paint and clone techniques</li>
-          <li>Ensured frame-by-frame consistency and motion continuity</li>
-        </ul>
-      </div>
-
-      <div class="project-card">
-        <div class="project-num">03</div>
-        <div class="project-title">Multi-Pass CG Compositing</div>
-        <ul class="project-points">
-          <li>Integrated beauty, shadow, reflection, and AO passes in a node-based workflow</li>
-          <li>Applied final grade and grain to match live-action footage for photorealistic output</li>
-        </ul>
-      </div>
-
+  <!-- ③ SOFTWARE -->
+  <div class="skills-section reveal">
+    <div class="section-label">03 / Software</div>
+    <div class="sw-grid">
+      <div class="sw-item"><img src="nuke.png" alt="Nuke"><span class="sw-label">Nuke</span></div>
+      <div class="sw-item"><img src="after-effects.png" alt="After Effects"><span class="sw-label">After Effects</span></div>
+      <div class="sw-item"><img src="photoshop.png" alt="Photoshop"><span class="sw-label">Photoshop</span></div>
+      <div class="sw-item"><img src="maya.png" alt="Maya"><span class="sw-label">Maya</span></div>
+      <div class="sw-item"><img src="blender.png" alt="Blender"><span class="sw-label">Blender</span></div>
+      <div class="sw-item"><img src="premiere-pro.png" alt="Premiere Pro"><span class="sw-label">Premiere</span></div>
     </div>
   </div>
 
-  <!-- ⑤ SKILLS + SOFTWARE -->
-  <div class="skills-software">
-    <div class="ss-cell">
-      <div class="section-label">05 / Core Skills</div>
-
-      <div class="skill-category">
-        <div class="skill-cat-name">Compositing</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Keying</span>
-          <span class="skill-tag">Rotoscoping</span>
-          <span class="skill-tag">Layer Management</span>
-          <span class="skill-tag">Multi-Pass CG Integration</span>
-        </div>
-      </div>
-
-      <div class="skill-category">
-        <div class="skill-cat-name">Colour</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Colour Correction</span>
-          <span class="skill-tag">Grading</span>
-          <span class="skill-tag">Look Development</span>
-          <span class="skill-tag">Grain & Motion Blur Matching</span>
-        </div>
-      </div>
-
-      <div class="skill-category">
-        <div class="skill-cat-name">VFX Pipeline</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Pre-Production to Delivery</span>
-          <span class="skill-tag">Render Pass Management</span>
-          <span class="skill-tag">Client-Ready Output</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="ss-cell">
-      <div class="section-label">06 / Software</div>
-      <div class="sw-grid">
-        <div class="sw-item"><img src="nuke.png" alt="Nuke"><span class="sw-label">Nuke</span></div>
-        <div class="sw-item"><img src="after-effects.png" alt="After Effects"><span class="sw-label">After Effects</span></div>
-        <div class="sw-item"><img src="photoshop.png" alt="Photoshop"><span class="sw-label">Photoshop</span></div>
-        <div class="sw-item"><img src="maya.png" alt="Maya"><span class="sw-label">Maya</span></div>
-        <div class="sw-item"><img src="blender.png" alt="Blender"><span class="sw-label">Blender</span></div>
-        <div class="sw-item"><img src="premiere-pro.png" alt="Premiere Pro"><span class="sw-label">Premiere</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ⑥ EDUCATION -->
-  <div class="edu-section">
-    <div class="section-label">07 / Education</div>
+  <!-- ④ EDUCATION -->
+  <div class="edu-section reveal">
+    <div class="section-label">04 / Education</div>
     <div class="edu-card">
       <div class="edu-year">2023 — 2026</div>
       <div class="edu-divider"></div>
@@ -559,6 +509,73 @@ h1 .line2 { display: block; color: var(--rust); }
 </div>
 
 <script>
+/* ── LOADER ── */
+document.body.classList.add('loading');
+const loaderBar = document.getElementById('loaderBar');
+const loaderCounter = document.getElementById('loaderCounter');
+const loader = document.getElementById('loader');
+let progress = 0;
+
+const tick = setInterval(() => {
+  const step = progress < 70 ? Math.random() * 6 + 2 : Math.random() * 2 + 0.5;
+  progress = Math.min(progress + step, 99);
+  loaderBar.style.width = progress + '%';
+  loaderCounter.textContent = Math.floor(progress) + '%';
+}, 60);
+
+function finishLoader() {
+  clearInterval(tick);
+  progress = 100;
+  loaderBar.style.width = '100%';
+  loaderCounter.textContent = '100%';
+
+  setTimeout(() => {
+    loader.classList.add('split');
+    document.body.classList.remove('loading');
+    document.body.classList.add('loaded');
+    setTimeout(() => { loader.style.display = 'none'; }, 800);
+  }, 300);
+}
+
+window.addEventListener('load', () => setTimeout(finishLoader, 600));
+setTimeout(finishLoader, 3200); /* fallback */
+
+/* ── CUSTOM CURSOR ── */
+const dot = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+(function animRing(){ rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
+document.querySelectorAll('a, button, .sw-item, .edu-card, .photo-frame').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; dot.style.transform='translate(-50%,-50%) scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; dot.style.transform='translate(-50%,-50%) scale(1)'; });
+});
+
+/* ── TYPEWRITER ── */
+const phrases = ['Compositing Artist', 'Keying & Rotoscoping', 'Multi-Pass CG', 'Colour Grading'];
+let pi = 0, ci = 0, deleting = false;
+const tw = document.getElementById('typewriter');
+function typeLoop() {
+  const current = phrases[pi];
+  if (!deleting) {
+    tw.textContent = current.slice(0, ++ci);
+    if (ci === current.length) { deleting = true; setTimeout(typeLoop, 1800); return; }
+  } else {
+    tw.textContent = current.slice(0, --ci);
+    if (ci === 0) { deleting = false; pi = (pi+1)%phrases.length; setTimeout(typeLoop, 300); return; }
+  }
+  setTimeout(typeLoop, deleting ? 45 : 90);
+}
+setTimeout(typeLoop, 800);
+
+/* ── SCROLL REVEAL ── */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+reveals.forEach(r => io.observe(r));
+
+/* ── PARTICLES ── */
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let W, H, pool = [];
