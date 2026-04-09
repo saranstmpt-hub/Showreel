@@ -6,607 +6,676 @@
 <title>Saran Selvakumar | Compositing Artist</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-
 :root {
-  --bg:   #060606;
-  --card: #111111;
+  --bg: #050505;
+  --card: #0d0d0d;
   --rust: #c93a28;
-  --white:#f5f5f5;
-  --line: rgba(255,255,255,0.08);
+  --rust2: #e84c35;
+  --white: #f0f0f0;
+  --line: rgba(255,255,255,0.06);
+  --gold: #b8924a;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; cursor: none; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;cursor:none;}
 
-/* ══════════════════════
-   LOADER / INTRO
-══════════════════════ */
-#loader {
-  position: fixed; inset: 0; z-index: 999999;
-  background: #060606;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  pointer-events: all;
+/* ══ NOISE OVERLAY ══ */
+body::after{content:"";position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:99998;opacity:1;}
+
+/* ══ LOADER ══ */
+#loader{position:fixed;inset:0;z-index:999999;background:#050505;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.l-panel{position:absolute;left:0;right:0;height:50%;background:#050505;transition:transform 0.9s cubic-bezier(0.76,0,0.24,1);}
+.l-panel.top{top:0;transform-origin:top;}
+.l-panel.bot{bottom:0;transform-origin:bottom;}
+#loader.open .l-panel.top{transform:translateY(-100%);}
+#loader.open .l-panel.bot{transform:translateY(100%);}
+#loader-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:20px;}
+.l-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,120px);letter-spacing:0.05em;color:var(--white);line-height:1;opacity:0;transform:translateY(20px);animation:fadeU 0.6s 0.1s ease forwards;}
+.l-name em{color:var(--rust);font-style:normal;}
+.l-role{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:var(--white);opacity:0;animation:fadeU 0.5s 0.3s ease forwards;}
+.l-bar-bg{width:280px;height:1px;background:rgba(255,255,255,0.08);overflow:hidden;opacity:0;animation:fadeU 0.4s 0.5s ease forwards;}
+.l-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--rust),var(--rust2));transition:width 0.04s linear;}
+.l-pct{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--rust);opacity:0;animation:fadeU 0.4s 0.5s ease forwards;}
+.l-slash{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(160px,30vw,320px);color:rgba(201,58,40,0.03);pointer-events:none;user-select:none;white-space:nowrap;top:50%;left:50%;transform:translate(-50%,-50%);}
+@keyframes fadeU{to{opacity:1;transform:translateY(0);}}
+
+body.loading .page-wrap{opacity:0;}
+body.loading{overflow:hidden;}
+body.ready .page-wrap{opacity:1;transition:opacity 0.5s ease 0.15s;}
+
+/* ══ CURSOR ══ */
+#cur{position:fixed;width:8px;height:8px;background:var(--rust);border-radius:50%;pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:transform 0.1s,background 0.2s;}
+#cur-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(201,58,40,0.45);border-radius:50%;pointer-events:none;z-index:99996;transform:translate(-50%,-50%);transition:width 0.25s,height 0.25s;}
+
+/* ══ CANVAS ══ */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;}
+
+/* ══ MARQUEE ══ */
+.marquee-strip{background:var(--rust);overflow:hidden;padding:9px 0;position:relative;z-index:10;}
+.m-inner{display:flex;animation:mq 24s linear infinite;white-space:nowrap;}
+.m-inner span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.22em;color:#fff;text-transform:uppercase;padding:0 36px;}
+.m-inner span::after{content:"◆";margin-left:36px;opacity:0.4;}
+@keyframes mq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ══ PAGE ══ */
+.page-wrap{position:relative;z-index:2;}
+.page{max-width:1240px;margin:0 auto;padding:0 64px 120px;}
+
+/* ══ SECTION LABEL ══ */
+.sl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:14px;margin-bottom:40px;opacity:0.5;}
+.sl::after{content:"";flex:1;height:1px;background:var(--line);max-width:50px;}
+
+/* ══ SLIDE REVEAL SYSTEM ══ */
+.slide-up{opacity:0;transform:translateY(60px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1);}
+.slide-left{opacity:0;transform:translateX(-60px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1);}
+.slide-right{opacity:0;transform:translateX(60px);transition:opacity 0.8s cubic-bezier(0.22,1,0.36,1),transform 0.8s cubic-bezier(0.22,1,0.36,1);}
+.slide-scale{opacity:0;transform:scale(0.92);transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1),transform 0.9s cubic-bezier(0.22,1,0.36,1);}
+.in{opacity:1!important;transform:none!important;}
+.d1{transition-delay:0.1s!important;}
+.d2{transition-delay:0.2s!important;}
+.d3{transition-delay:0.3s!important;}
+.d4{transition-delay:0.4s!important;}
+.d5{transition-delay:0.5s!important;}
+
+/* ══ HERO ══ */
+.hero{padding:90px 0 0;border-bottom:1px solid var(--line);position:relative;overflow:hidden;}
+
+/* BIG BG TEXT */
+.hero-bg-text{position:absolute;bottom:-20px;left:-20px;font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,18vw,220px);color:rgba(255,255,255,0.02);line-height:1;pointer-events:none;user-select:none;white-space:nowrap;z-index:0;}
+
+.hero-inner{display:grid;grid-template-columns:1fr 340px;gap:0;position:relative;z-index:1;}
+.hero-left{padding-bottom:70px;padding-right:70px;border-right:1px solid var(--line);}
+
+.eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--rust);margin-bottom:30px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:"";display:block;width:28px;height:1px;background:var(--rust);}
+
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,11vw,130px);line-height:0.88;letter-spacing:0.02em;color:var(--white);margin-bottom:0;}
+h1 .accent{display:block;color:var(--rust);-webkit-text-stroke:0px;text-shadow:0 0 80px rgba(201,58,40,0.3);}
+
+/* Glitch effect on name */
+.glitch-wrap{position:relative;display:inline-block;}
+.glitch-wrap::before,.glitch-wrap::after{content:attr(data-text);position:absolute;top:0;left:0;pointer-events:none;}
+.glitch-wrap::before{color:var(--rust2);clip-path:polygon(0 0,100% 0,100% 45%,0 45%);animation:glitch1 4s infinite;opacity:0.5;}
+.glitch-wrap::after{color:#39c;clip-path:polygon(0 55%,100% 55%,100% 100%,0 100%);animation:glitch2 4s infinite;opacity:0.3;}
+@keyframes glitch1{0%,94%,100%{transform:none;opacity:0;}95%{transform:translate(-3px,1px);opacity:0.5;}97%{transform:translate(3px,-1px);opacity:0.5;}99%{transform:translate(-1px,2px);opacity:0.5;}}
+@keyframes glitch2{0%,94%,100%{transform:none;opacity:0;}95%{transform:translate(3px,1px);opacity:0.3;}97%{transform:translate(-3px,-1px);opacity:0.3;}99%{transform:translate(1px,-2px);opacity:0.3;}}
+
+.role-tag{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--white);margin-top:22px;margin-bottom:32px;min-height:1.6em;}
+.blink{display:inline-block;width:2px;height:1em;background:var(--rust);margin-left:3px;vertical-align:middle;animation:blink 0.9s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* STAT ROW */
+.stat-row{display:flex;gap:0;margin-bottom:36px;border:1px solid var(--line);}
+.stat{flex:1;padding:20px 24px;border-right:1px solid var(--line);position:relative;overflow:hidden;}
+.stat:last-child{border-right:none;}
+.stat::before{content:"";position:absolute;bottom:0;left:0;width:0%;height:2px;background:var(--rust);transition:width 0.4s ease;}
+.stat:hover::before{width:100%;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--rust);line-height:1;}
+.stat-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);opacity:0.4;margin-top:4px;}
+
+/* CONTACT */
+.contact-row{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:32px;}
+.c-item{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--white);text-decoration:none;transition:color 0.2s;cursor:none;opacity:0.55;transition:opacity 0.2s;}
+.c-item:hover{opacity:1;color:var(--rust);}
+.c-item svg{width:12px;height:12px;flex-shrink:0;}
+
+/* CV BTN */
+.cv-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:transparent;color:var(--white);text-decoration:none;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.15);transition:all 0.3s;cursor:none;position:relative;overflow:hidden;}
+.cv-btn::before{content:"";position:absolute;inset:0;background:var(--rust);transform:translateX(-101%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);}
+.cv-btn:hover::before{transform:translateX(0);}
+.cv-btn:hover{border-color:var(--rust);}
+.cv-btn>*{position:relative;z-index:1;}
+.cv-btn svg{width:13px;height:13px;}
+
+/* HERO RIGHT — identity block (no photo) */
+.hero-right{padding-left:54px;padding-bottom:70px;display:flex;flex-direction:column;justify-content:center;gap:32px;}
+
+/* IDENTITY CARD */
+.id-card{border:1px solid var(--line);padding:32px;position:relative;overflow:hidden;background:var(--card);}
+.id-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--rust),transparent);}
+.id-initials{font-family:'Bebas Neue',sans-serif;font-size:100px;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(201,58,40,0.25);letter-spacing:-0.02em;margin-bottom:8px;}
+.id-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--white);opacity:0.3;border-top:1px solid var(--line);padding-top:14px;}
+
+/* ORBIT ANIMATION */
+.orbit-wrap{position:relative;width:140px;height:140px;margin:0 auto;}
+.orbit-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--rust);}
+.orbit-ring{position:absolute;inset:0;border:1px dashed rgba(201,58,40,0.15);border-radius:50%;animation:spin 14s linear infinite;}
+.orbit-ring2{position:absolute;inset:14px;border:1px dashed rgba(201,58,40,0.08);border-radius:50%;animation:spin 9s linear infinite reverse;}
+.orbit-dot{position:absolute;top:-4px;left:50%;width:8px;height:8px;background:var(--rust);border-radius:50%;margin-left:-4px;box-shadow:0 0 10px var(--rust);}
+.orbit-dot2{position:absolute;top:50%;right:-4px;width:5px;height:5px;background:var(--rust2);border-radius:50%;margin-top:-2.5px;box-shadow:0 0 8px var(--rust2);}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* LOCATION TAG */
+.loc-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--white);opacity:0.35;display:flex;align-items:center;gap:8px;}
+.loc-tag::before{content:"";display:block;width:6px;height:6px;background:var(--rust);border-radius:50%;animation:locPulse 2s ease infinite;}
+@keyframes locPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,58,40,0.6);}50%{box-shadow:0 0 0 6px rgba(201,58,40,0);}}
+
+/* ══ SHOWREEL ══ */
+.showreel-section{padding:80px 0;border-bottom:1px solid var(--line);}
+.sr-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;}
+.sr-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,80px);line-height:1;letter-spacing:0.04em;}
+.sr-note{font-family:'Space Mono',monospace;font-size:10px;color:var(--white);letter-spacing:0.15em;text-transform:uppercase;padding-bottom:8px;opacity:0.4;}
+
+/* VIDEO with scan-line + corner decorations */
+.video-outer{position:relative;}
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;border:1px solid var(--line);transition:border-color 0.3s,box-shadow 0.3s;}
+.video-wrap:hover{border-color:rgba(201,58,40,0.35);box-shadow:0 0 60px rgba(201,58,40,0.06);}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+/* corner brackets */
+.corner{position:absolute;width:28px;height:28px;z-index:3;pointer-events:none;}
+.corner.tl{top:10px;left:10px;border-top:2px solid var(--rust);border-left:2px solid var(--rust);}
+.corner.tr{top:10px;right:10px;border-top:2px solid var(--rust);border-right:2px solid var(--rust);}
+.corner.bl{bottom:10px;left:10px;border-bottom:2px solid var(--rust);border-left:2px solid var(--rust);}
+.corner.br{bottom:10px;right:10px;border-bottom:2px solid var(--rust);border-right:2px solid var(--rust);}
+
+/* scan line */
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,58,40,0.15),transparent);animation:scan 3.5s ease-in-out infinite;z-index:4;pointer-events:none;}
+@keyframes scan{0%{top:-2px;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{top:100%;opacity:0;}}
+
+/* REC badge */
+.rec-badge{position:absolute;top:18px;right:18px;z-index:5;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.2em;color:#fff;background:rgba(201,58,40,0.85);padding:4px 10px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px);}
+.rec-dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1.2s step-end infinite;}
+
+.sr-desc{margin-top:22px;font-size:12px;font-weight:300;font-family:'Space Mono',monospace;line-height:1.9;opacity:0.45;border-left:2px solid var(--rust);padding-left:18px;}
+
+/* ══ SKILLS ══ */
+.skills-section{padding:80px 0;border-bottom:1px solid var(--line);}
+
+/* HORIZONTAL SCROLL ticker for skills */
+.skills-ticker-outer{overflow:hidden;margin-bottom:40px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;}
+.skills-ticker{display:flex;animation:ticker 20s linear infinite;white-space:nowrap;}
+.skills-ticker span{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,60px);color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.08);letter-spacing:0.06em;padding:0 30px;transition:color 0.3s,-webkit-text-stroke 0.3s;}
+.skills-ticker span:hover{color:var(--rust);-webkit-text-stroke:0px;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+.sw-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.sw-item{aspect-ratio:1;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden;cursor:none;transition:background 0.3s;}
+.sw-item::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(201,58,40,0.08) 0%,transparent 70%);opacity:0;transition:opacity 0.3s;}
+.sw-item:hover{background:#141414;}
+.sw-item:hover::after{opacity:1;}
+.sw-item img{width:60px;height:60px;position:relative;z-index:1;object-fit:contain;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),filter 0.3s;}
+.sw-item:hover img{transform:scale(1.15) translateY(-3px);filter:drop-shadow(0 6px 16px rgba(201,58,40,0.35));}
+.sw-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);position:relative;z-index:1;text-align:center;opacity:0.4;transition:opacity 0.2s;}
+.sw-item:hover .sw-label{opacity:0.85;}
+
+/* SKILLS BAR SECTION */
+.skills-bars{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:20px 60px;}
+.skill-bar-item{}
+.skill-bar-top{display:flex;justify-content:space-between;margin-bottom:8px;}
+.skill-bar-name{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.6;}
+.skill-bar-pct{font-family:'Space Mono',monospace;font-size:10px;color:var(--rust);}
+.skill-bar-bg{height:1px;background:rgba(255,255,255,0.06);position:relative;}
+.skill-bar-fill{position:absolute;top:0;left:0;height:1px;background:linear-gradient(90deg,var(--rust),var(--rust2));width:0%;transition:width 1.2s cubic-bezier(0.22,1,0.36,1);}
+.skill-bar-fill::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;background:var(--rust);border-radius:50%;box-shadow:0 0 8px var(--rust);}
+
+/* ══ TIMELINE ══ */
+.timeline-section{padding:80px 0;border-bottom:1px solid var(--line);}
+.tl-line{position:relative;padding-left:36px;margin-top:48px;}
+.tl-line::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--rust),transparent);}
+.tl-item{position:relative;padding-bottom:44px;}
+.tl-item::before{content:"";position:absolute;left:-40px;top:6px;width:9px;height:9px;border:1px solid var(--rust);border-radius:50%;background:var(--bg);box-shadow:0 0 12px rgba(201,58,40,0.4);}
+.tl-year{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.25em;color:var(--rust);margin-bottom:10px;}
+.tl-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.04em;color:var(--white);margin-bottom:6px;}
+.tl-place{font-size:13px;font-weight:300;opacity:0.45;margin-bottom:8px;}
+.tl-desc{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.08em;line-height:1.8;opacity:0.35;}
+
+/* ══ EDUCATION ══ */
+.edu-section{padding:80px 0;border-bottom:1px solid var(--line);}
+.edu-card{display:grid;grid-template-columns:auto 1px 1fr;gap:50px;align-items:center;background:var(--card);border:1px solid var(--line);padding:52px 58px;position:relative;overflow:hidden;transition:border-color 0.3s,box-shadow 0.3s;}
+.edu-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--rust),transparent);}
+.edu-card::after{content:"";position:absolute;bottom:0;right:0;width:200px;height:200px;border-bottom:1px solid var(--rust);border-right:1px solid var(--rust);opacity:0.08;border-radius:0;transition:opacity 0.3s,width 0.3s,height 0.3s;}
+.edu-card:hover::after{opacity:0.25;width:240px;height:240px;}
+.edu-card:hover{border-color:rgba(201,58,40,0.2);box-shadow:0 20px 80px rgba(0,0,0,0.4);}
+.edu-year{font-family:'Bebas Neue',sans-serif;font-size:54px;color:var(--rust);line-height:1;white-space:nowrap;}
+.edu-div{width:1px;height:80px;background:var(--line);}
+.edu-degree{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--white);letter-spacing:0.04em;line-height:1.2;margin-bottom:8px;}
+.edu-school{font-size:14px;font-weight:300;color:var(--white);margin-bottom:8px;opacity:0.5;}
+.edu-note{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--white);text-transform:uppercase;opacity:0.3;}
+
+/* ══ FOOTER ══ */
+.footer{padding:60px 0 0;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);}
+.f-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;color:var(--white);opacity:0.12;}
+.f-copy{font-family:'Space Mono',monospace;font-size:9px;color:var(--white);letter-spacing:0.12em;text-transform:uppercase;opacity:0.25;}
+.f-back{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--rust);text-decoration:none;cursor:none;opacity:0;transition:opacity 0.3s;}
+.f-back:hover{opacity:0.8;}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){
+  .page{padding:0 40px 100px;}
+  .hero-inner{grid-template-columns:1fr 280px;}
+  .hero-left{padding-right:44px;}
+  .hero-right{padding-left:44px;}
+  .sw-grid{grid-template-columns:repeat(3,1fr);}
+  .skills-bars{grid-template-columns:1fr;}
 }
-
-/* two panels that split open */
-#loader-top, #loader-bot {
-  position: absolute; left: 0; right: 0; height: 50%;
-  background: #060606;
-  transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
+@media(max-width:860px){
+  .page{padding:0 28px 80px;}
+  h1{font-size:clamp(56px,12vw,88px);}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-left{border-right:none;border-bottom:1px solid var(--line);padding-right:0;padding-bottom:50px;text-align:center;}
+  .eyebrow{justify-content:center;}
+  .eyebrow::before{display:none;}
+  .role-tag{text-align:center;}
+  .stat-row{flex-direction:column;}
+  .stat{border-right:none;border-bottom:1px solid var(--line);}
+  .contact-row{justify-content:center;}
+  .hero-right{padding-left:0;padding-top:50px;align-items:center;}
+  .sw-grid{grid-template-columns:repeat(3,1fr);}
+  .edu-card{grid-template-columns:1fr;gap:16px;padding:36px 28px;text-align:center;justify-items:center;}
+  .edu-div{display:none;}
+  .sr-header{flex-direction:column;gap:6px;text-align:center;}
+  .footer{flex-direction:column;gap:12px;text-align:center;}
+  body{cursor:auto;}
+  #cur,#cur-ring{display:none;}
 }
-#loader-top { top: 0; transform-origin: top; }
-#loader-bot { bottom: 0; transform-origin: bottom; }
-#loader.split #loader-top { transform: translateY(-100%); }
-#loader.split #loader-bot { transform: translateY(100%); }
-
-/* center content */
-#loader-content {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 24px;
-}
-
-.loader-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(52px, 10vw, 100px);
-  letter-spacing: 0.06em;
-  color: var(--white);
-  line-height: 1;
-  opacity: 0;
-  transform: translateY(16px);
-  animation: loaderNameIn 0.6s 0.1s ease forwards;
-}
-.loader-name span { color: var(--rust); }
-
-@keyframes loaderNameIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.loader-role {
-  font-family: 'Space Mono', monospace;
-  font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: var(--white); opacity: 0;
-  animation: loaderNameIn 0.5s 0.35s ease forwards;
-}
-
-/* progress bar */
-.loader-bar-wrap {
-  width: clamp(200px, 40vw, 340px); height: 1px;
-  background: rgba(255,255,255,0.1);
-  position: relative; overflow: hidden;
-  opacity: 0; animation: loaderNameIn 0.4s 0.5s ease forwards;
-}
-.loader-bar-fill {
-  position: absolute; top: 0; left: 0; height: 100%;
-  background: var(--rust); width: 0%;
-  transition: width 0.05s linear;
-}
-
-/* counter */
-.loader-counter {
-  font-family: 'Space Mono', monospace; font-size: 11px;
-  letter-spacing: 0.2em; color: var(--rust);
-  opacity: 0; animation: loaderNameIn 0.4s 0.5s ease forwards;
-}
-
-/* diagonal slash decoration */
-.loader-slash {
-  position: absolute; font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(120px, 25vw, 260px); color: rgba(201,58,40,0.04);
-  letter-spacing: -0.05em; user-select: none; pointer-events: none;
-  top: 50%; left: 50%; transform: translate(-50%,-50%);
-  white-space: nowrap;
-}
-
-/* page hidden until loader gone */
-body.loading .page,
-body.loading .marquee-strip { opacity: 0; }
-body.loading { overflow: hidden; }
-body.loaded .page,
-body.loaded .marquee-strip {
-  opacity: 1;
-  transition: opacity 0.5s ease 0.1s;
-}
-
-/* CUSTOM CURSOR */
-#cursor { position: fixed; width: 10px; height: 10px; background: var(--rust); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: transform 0.1s ease, background 0.2s ease; mix-blend-mode: normal; }
-#cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(201,58,40,0.5); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.25s ease, height 0.25s ease, opacity 0.2s ease; }
-body:hover #cursor-ring { opacity: 1; }
-
-#particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-
-body::before {
-  content: ""; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999; opacity: 0.8;
-}
-
-/* MARQUEE */
-.marquee-strip { background: var(--rust); overflow: hidden; padding: 10px 0; position: relative; z-index: 10; }
-.marquee-inner { display: flex; animation: marquee 22s linear infinite; white-space: nowrap; }
-.marquee-inner span { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #fff; text-transform: uppercase; padding: 0 40px; }
-.marquee-inner span::after { content: "◆"; margin-left: 40px; opacity: 0.5; }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-.page { max-width: 1200px; margin: 0 auto; padding: 0 60px 100px; position: relative; z-index: 2; }
-
-/* SECTION LABEL */
-.section-label {
-  font-family: 'Space Mono', monospace; font-size: 15px;
-  letter-spacing: 0.28em; text-transform: uppercase; color: var(--white);
-  display: flex; align-items: center; gap: 14px; margin-bottom: 36px;
-}
-.section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); max-width: 60px; }
-
-/* REVEAL ANIMATION */
-.reveal {
-  opacity: 0;
-  transform: translateY(36px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ══════════════════════
-   1. HERO
-══════════════════════ */
-.hero {
-  display: grid; grid-template-columns: 1fr clamp(220px, 30%, 420px); gap: 0;
-  border-bottom: 1px solid var(--line); padding: 80px 0 0;
-}
-.hero-text { padding-bottom: 60px; padding-right: 60px; border-right: 1px solid var(--line); }
-
-.eyebrow {
-  font-family: 'Space Mono', monospace; font-size: 11px;
-  letter-spacing: 0.25em; text-transform: uppercase; color: var(--rust);
-  margin-bottom: 28px; display: flex; align-items: center; gap: 12px;
-}
-.eyebrow::before { content: ""; display: block; width: 32px; height: 1px; background: var(--rust); }
-
-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(72px, 10vw, 120px);
-  line-height: 0.9; letter-spacing: 0.02em; color: var(--white); margin-bottom: 6px;
-}
-h1 .line2 { display: block; color: var(--rust); }
-
-.role-tag {
-  font-family: 'Space Mono', monospace; font-size: 12px;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--white); margin-top: 20px; margin-bottom: 28px;
-  min-height: 1.5em;
-}
-.role-tag .cursor-blink { display: inline-block; width: 2px; height: 1em; background: var(--rust); margin-left: 3px; vertical-align: middle; animation: blink 0.9s step-end infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-/* contact row */
-.contact-row {
-  display: flex; flex-wrap: wrap; gap: 16px 28px;
-  margin-bottom: 36px;
-}
-.contact-item {
-  display: flex; align-items: center; gap: 8px;
-  font-family: 'Space Mono', monospace; font-size: 10px;
-  letter-spacing: 0.1em; color: var(--white); text-decoration: none;
-  transition: color 0.2s; cursor: none;
-}
-.contact-item:hover { color: var(--rust); }
-.contact-item svg { width: 13px; height: 13px; flex-shrink: 0; opacity: 0.6; }
-
-.cv-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 30px; background: transparent; color: var(--white);
-  text-decoration: none; font-family: 'Space Mono', monospace;
-  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.2); transition: all 0.25s ease;
-  cursor: none; position: relative; overflow: hidden;
-}
-.cv-btn::before {
-  content: ""; position: absolute; inset: 0;
-  background: var(--rust); transform: translateX(-101%);
-  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-}
-.cv-btn:hover::before { transform: translateX(0); }
-.cv-btn:hover { border-color: var(--rust); }
-.cv-btn span, .cv-btn svg { position: relative; z-index: 1; }
-.cv-btn svg { width: 14px; height: 14px; }
-
-.hero-photo {
-  padding-left: 50px; padding-bottom: 60px;
-  display: flex; flex-direction: column; justify-content: center;
-  min-width: 0;
-}
-.photo-frame { position: relative; width: 100%; max-width: 100%; }
-.photo-frame::before {
-  content: ""; position: absolute; top: -12px; right: -12px;
-  width: 100%; height: 100%; border: 2px solid var(--rust); z-index: 0;
-  transition: top 0.3s ease, right 0.3s ease;
-}
-.photo-frame:hover::before { top: -18px; right: -18px; }
-.photo-frame img {
-  width: 100%; height: auto; display: block; position: relative; z-index: 1;
-  filter: grayscale(20%) contrast(1.08) brightness(0.92);
-  object-fit: cover; transition: filter 0.4s ease;
-}
-.photo-frame:hover img { filter: grayscale(0%) contrast(1.05) brightness(0.95); }
-.photo-index { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.2em; margin-top: 16px; text-align: right; opacity: 0.45; }
-
-/* ══════════════════════
-   2. SHOWREEL
-══════════════════════ */
-.showreel-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
-.showreel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
-.showreel-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 7vw, 72px); line-height: 1; letter-spacing: 0.04em; color: var(--white); }
-.showreel-note { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.15em; text-transform: uppercase; padding-bottom: 6px; opacity: 0.5; }
-
-.video-wrapper {
-  position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden;
-  background: #000; border: 1px solid var(--line);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.video-wrapper:hover { border-color: rgba(201,58,40,0.4); box-shadow: 0 0 40px rgba(201,58,40,0.08); }
-.video-wrapper::after { content: ""; position: absolute; top: 12px; left: 12px; width: 24px; height: 24px; border-top: 2px solid var(--rust); border-left: 2px solid var(--rust); z-index: 3; pointer-events: none; }
-.video-corner-br { position: absolute; bottom: 12px; right: 12px; width: 24px; height: 24px; border-bottom: 2px solid var(--rust); border-right: 2px solid var(--rust); z-index: 3; pointer-events: none; }
-.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-
-.showreel-desc {
-  margin-top: 20px;
-  font-size: 13px; font-weight: 300; color: var(--white);
-  font-family: 'Space Mono', monospace; line-height: 1.8; opacity: 0.6;
-  border-left: 2px solid var(--rust); padding-left: 18px;
-}
-
-/* ══════════════════════
-   3. SKILLS (Software only, expanded)
-══════════════════════ */
-.skills-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
-
-.sw-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1px; background: var(--line);
-  border: 1px solid var(--line);
-}
-
-.sw-item {
-  aspect-ratio: 1; background: var(--card);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
-  position: relative; overflow: hidden;
-  cursor: none; transition: background 0.3s ease;
-}
-.sw-item::before {
-  content: ""; position: absolute; inset: 0;
-  background: var(--rust); opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.sw-item:hover { background: #161616; }
-.sw-item:hover::before { opacity: 0.04; }
-.sw-item img { width: 64px; height: 64px; position: relative; z-index: 1; object-fit: contain; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-.sw-item:hover img { transform: scale(1.12); }
-.sw-item .sw-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); position: relative; z-index: 1; text-align: center; padding: 0 6px; opacity: 0.5; transition: opacity 0.2s; }
-.sw-item:hover .sw-label { opacity: 0.9; }
-
-/* ══════════════════════
-   4. EDUCATION
-══════════════════════ */
-.edu-section { padding: 70px 0; border-bottom: 1px solid var(--line); }
-.edu-card {
-  display: grid; grid-template-columns: auto 1px 1fr; gap: 50px;
-  align-items: center; background: var(--card);
-  border: 1px solid var(--line); padding: 48px 54px;
-  position: relative; overflow: hidden;
-  transition: border-color 0.3s ease;
-}
-.edu-card::before { content: ""; position: absolute; top: 0; right: 0; width: 120px; height: 120px; border-top: 2px solid var(--rust); border-right: 2px solid var(--rust); opacity: 0.3; transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease; }
-.edu-card:hover { border-color: rgba(201,58,40,0.25); }
-.edu-card:hover::before { opacity: 0.7; width: 160px; height: 160px; }
-.edu-year { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: var(--rust); line-height: 1; white-space: nowrap; }
-.edu-divider { width: 1px; height: 80px; background: var(--line); }
-.edu-degree { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--white); letter-spacing: 0.04em; line-height: 1.15; margin-bottom: 8px; }
-.edu-school { font-size: 14px; font-weight: 300; color: var(--white); margin-bottom: 8px; opacity: 0.6; }
-.edu-note { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: var(--white); text-transform: uppercase; opacity: 0.4; }
-
-/* FOOTER */
-.footer { padding-top: 50px; display: flex; align-items: center; justify-content: space-between; }
-.footer-name { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.1em; color: var(--white); opacity: 0.18; }
-.footer-copy { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--white); letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.35; }
-
-/* HERO ENTRY ANIMATION */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-.hero { animation: fadeUp 0.8s 0.0s ease both; }
-
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
-@media (max-width: 1199px) {
-  .page { padding: 0 40px 100px; }
-  h1 { font-size: clamp(64px, 9vw, 100px); }
-  .hero { grid-template-columns: 1fr clamp(220px, 28%, 340px); }
-  .hero-text { padding-right: 40px; }
-  .hero-photo { padding-left: 40px; }
-  .sw-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 899px) {
-  .page { padding: 0 32px 80px; }
-  h1 { font-size: clamp(54px, 12vw, 80px); }
-  .hero { grid-template-columns: 1fr; padding-top: 50px; }
-  .hero-text { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: 50px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .eyebrow { justify-content: center; }
-  .eyebrow::before { display: none; }
-  .role-tag { text-align: center; }
-  .contact-row { justify-content: center; }
-  .hero-photo { padding-left: 0; padding-top: 50px; padding-bottom: 50px; align-items: center; }
-  .photo-frame { width: min(340px, 70%); }
-  .showreel-header { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
-  .showreel-section .section-label { justify-content: center; }
-  .showreel-section .section-label::after { display: none; }
-  .skills-section .section-label { justify-content: center; }
-  .skills-section .section-label::after { display: none; }
-  .sw-grid { grid-template-columns: repeat(3,1fr); }
-  .edu-section .section-label { justify-content: center; }
-  .edu-section .section-label::after { display: none; }
-  .edu-card { grid-template-columns: 1fr; gap: 16px; padding: 40px 36px; text-align: center; justify-items: center; }
-  .edu-divider { display: none; }
-  .footer { flex-direction: column; gap: 12px; align-items: center; text-align: center; }
-  body { cursor: auto; }
-  #cursor, #cursor-ring { display: none; }
-}
-
-@media (max-width: 699px) {
-  .page { padding: 0 20px 60px; }
-  h1 { font-size: clamp(48px, 14vw, 68px); }
-  .hero { padding-top: 36px; }
-  .hero-text { padding-bottom: 36px; }
-  .contact-row { flex-direction: column; align-items: center; gap: 12px; }
-  .photo-frame { width: min(260px, 80%); }
-  .sw-grid { grid-template-columns: repeat(2,1fr); }
-  .sw-item img { width: 44px; height: 44px; }
-  .edu-card { padding: 28px 20px; }
-  .edu-year { font-size: 38px; }
-  .showreel-title { font-size: clamp(36px, 10vw, 52px); }
-}
-
-@media (max-width: 400px) {
-  .page { padding: 0 16px 50px; }
-  h1 { font-size: 48px; }
-  .sw-grid { grid-template-columns: repeat(2,1fr); }
-  .sw-item img { width: 38px; height: 38px; }
+@media(max-width:560px){
+  .page{padding:0 18px 60px;}
+  h1{font-size:clamp(50px,14vw,70px);}
+  .sw-grid{grid-template-columns:repeat(2,1fr);}
+  .sw-item img{width:42px;height:42px;}
+  .stat-row{flex-direction:column;}
 }
 </style>
 </head>
-<body>
+<body class="loading">
 
-<!-- ══ LOADER ══ -->
+<!-- LOADER -->
 <div id="loader">
-  <div id="loader-top"></div>
-  <div id="loader-bot"></div>
-  <div class="loader-slash">SS</div>
-  <div id="loader-content">
-    <div class="loader-name">Saran<span>&nbsp;S</span></div>
-    <div class="loader-role">Compositing Artist</div>
-    <div class="loader-bar-wrap"><div class="loader-bar-fill" id="loaderBar"></div></div>
-    <div class="loader-counter" id="loaderCounter">0%</div>
+  <div class="l-panel top"></div>
+  <div class="l-panel bot"></div>
+  <div class="l-slash">SS</div>
+  <div id="loader-inner">
+    <div class="l-name">Saran<em>&nbsp;S</em></div>
+    <div class="l-role">Compositing Artist · VFX</div>
+    <div class="l-bar-bg"><div class="l-bar-fill" id="lBar"></div></div>
+    <div class="l-pct" id="lPct">0%</div>
   </div>
 </div>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
 <canvas id="particles"></canvas>
 
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span>Compositing Artist</span><span>Keying &amp; Rotoscoping</span>
-    <span>Colour Grading</span><span>VFX Pipeline</span><span>Multi-Pass CG</span>
-    <span>Nuke · After Effects · Maya</span>
-    <span>Compositing Artist</span><span>Keying &amp; Rotoscoping</span>
-    <span>Colour Grading</span><span>VFX Pipeline</span><span>Multi-Pass CG</span>
-    <span>Nuke · After Effects · Maya</span>
-  </div>
-</div>
+<div class="page-wrap">
 
-<div class="page">
-
-  <!-- ① HERO -->
-  <div class="hero">
-    <div class="hero-text">
-      <div class="eyebrow">Portfolio</div>
-      <h1>Saran<span class="line2">Selvakumar</span></h1>
-      <div class="role-tag" id="roleTag"><span id="typewriter"></span><span class="cursor-blink"></span></div>
-
-      <div class="contact-row">
-        <a href="mailto:saranyes77@gmail.com" class="contact-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          saranyes77@gmail.com
-        </a>
-        <a href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" class="contact-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          linkedin.com/in/saran-s
-        </a>
-        <span class="contact-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Pune, Maharashtra, India
-        </span>
-      </div>
-
-      <a href="saran_resume_check.pdf" class="cv-btn" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Download CV</span>
-      </a>
-    </div>
-
-    <div class="hero-photo">
-      <div class="photo-frame">
-        <img src="DP.jpg" alt="Saran Selvakumar">
-      </div>
-      <div class="photo-index">001 / PORTRAIT</div>
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="m-inner">
+      <span>Compositing Artist</span><span>Keying & Rotoscoping</span><span>Colour Grading</span>
+      <span>VFX Pipeline</span><span>Multi-Pass CG</span><span>Nuke · AE · Maya</span>
+      <span>Compositing Artist</span><span>Keying & Rotoscoping</span><span>Colour Grading</span>
+      <span>VFX Pipeline</span><span>Multi-Pass CG</span><span>Nuke · AE · Maya</span>
     </div>
   </div>
 
-  <!-- ② SHOWREEL -->
-  <div class="showreel-section reveal">
-    <div class="showreel-header">
-      <div>
-        <div class="section-label">02 / Reel</div>
-        <div class="showreel-title">Showreel</div>
-      </div>
-      <div class="showreel-note">2026 ShowReel</div>
-    </div>
+  <div class="page">
 
-    <div class="video-wrapper">
-      <div class="video-corner-br"></div>
-      <iframe
-        width="100%"
-        height="500"
-        src="https://www.youtube.com/embed/fCmgCloS9O8"
-        title="Showreel Video"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
+    <!-- ① HERO -->
+    <div class="hero">
+      <div class="hero-bg-text">COMPOSITING</div>
+      <div class="hero-inner">
 
-    <p class="showreel-desc">
-      Green-screen compositing · Paint prep work · Multi-pass CG compositing —
-      demonstrating keying precision, cleanup accuracy, and seamless integration techniques.
-    </p>
-  </div>
+        <div class="hero-left">
+          <div class="eyebrow slide-left">Portfolio · 2026</div>
+          <h1 class="slide-up d1">
+            <div class="glitch-wrap" data-text="SARAN">SARAN</div>
+            <span class="accent glitch-wrap" data-text="SELVAKUMAR">SELVAKUMAR</span>
+          </h1>
+          <div class="role-tag slide-up d2"><span id="typewriter"></span><span class="blink"></span></div>
 
-  <!-- ③ SOFTWARE -->
-  <div class="skills-section reveal">
-    <div class="section-label">03 / Software</div>
-    <div class="sw-grid">
-      <div class="sw-item"><img src="nuke.png" alt="Nuke"><span class="sw-label">Nuke</span></div>
-      <div class="sw-item"><img src="after-effects.png" alt="After Effects"><span class="sw-label">After Effects</span></div>
-      <div class="sw-item"><img src="photoshop.png" alt="Photoshop"><span class="sw-label">Photoshop</span></div>
-      <div class="sw-item"><img src="maya.png" alt="Maya"><span class="sw-label">Maya</span></div>
-      <div class="sw-item"><img src="blender.png" alt="Blender"><span class="sw-label">Blender</span></div>
-      <div class="sw-item"><img src="premiere-pro.png" alt="Premiere Pro"><span class="sw-label">Premiere</span></div>
-    </div>
-  </div>
+          <!-- STATS -->
+          <div class="stat-row slide-up d2">
+            <div class="stat">
+              <div class="stat-num" data-count="3">0</div>
+              <div class="stat-label">Years Study</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num" data-count="6">0</div>
+              <div class="stat-label">Software</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num" data-count="100">0</div>
+              <div class="stat-label">Dedication %</div>
+            </div>
+          </div>
 
-  <!-- ④ EDUCATION -->
-  <div class="edu-section reveal">
-    <div class="section-label">04 / Education</div>
-    <div class="edu-card">
-      <div class="edu-year">2023 — 2026</div>
-      <div class="edu-divider"></div>
-      <div class="edu-info">
-        <div class="edu-degree">Visual Effects, Animation & Compositing</div>
-        <div class="edu-school">Dr. D. Y. Patil Vidyapeeth · Pune, Maharashtra</div>
-        <div class="edu-note">Bachelor's Degree · In Progress · Aug 2023 – Jun 2026</div>
+          <div class="contact-row slide-up d3">
+            <a href="mailto:saranyes77@gmail.com" class="c-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              saranyes77@gmail.com
+            </a>
+            <a href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" class="c-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+              LinkedIn
+            </a>
+            <span class="c-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Pune, Maharashtra
+            </span>
+          </div>
+
+          <a href="saran_resume_check.pdf" class="cv-btn slide-up d4" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download CV</span>
+          </a>
+        </div>
+
+        <!-- HERO RIGHT — identity, no photo -->
+        <div class="hero-right slide-right d2">
+          <div class="id-card">
+            <div class="id-initials">SS</div>
+            <div class="id-tag">Compositing Artist · Pune, India</div>
+          </div>
+
+          <div class="orbit-wrap">
+            <div class="orbit-ring">
+              <div class="orbit-dot"></div>
+            </div>
+            <div class="orbit-ring2">
+              <div class="orbit-dot2"></div>
+            </div>
+            <div class="orbit-center">VFX</div>
+          </div>
+
+          <div class="loc-tag">Pune · Maharashtra · India</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="footer">
-    <div class="footer-name">Saran Selvakumar</div>
-    <div class="footer-copy">Compositing Artist · Portfolio</div>
-  </div>
+    <!-- ② SHOWREEL -->
+    <div class="showreel-section">
+      <div class="sr-header slide-up">
+        <div>
+          <div class="sl">02 / Reel</div>
+          <div class="sr-title">Showreel</div>
+        </div>
+        <div class="sr-note">2026 ShowReel</div>
+      </div>
 
-</div>
+      <div class="video-outer slide-scale d1">
+        <div class="video-wrap">
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <div class="scanline"></div>
+          <div class="rec-badge"><span class="rec-dot"></span>REC</div>
+          <iframe
+            src="https://www.youtube.com/embed/WkV8_9l4a0Y"
+            title="Saran Selvakumar Showreel 2026"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+      <p class="sr-desc slide-up d2">Green-screen compositing · Paint prep work · Multi-pass CG compositing — demonstrating keying precision, cleanup accuracy, and seamless integration techniques.</p>
+    </div>
+
+    <!-- ③ SOFTWARE -->
+    <div class="skills-section">
+      <div class="sl slide-left">03 / Software & Skills</div>
+
+      <!-- Scrolling ticker -->
+      <div class="skills-ticker-outer slide-up">
+        <div class="skills-ticker">
+          <span>NUKE</span><span>AFTER EFFECTS</span><span>MAYA</span><span>BLENDER</span>
+          <span>PHOTOSHOP</span><span>PREMIERE PRO</span><span>KEYING</span><span>ROTOSCOPING</span>
+          <span>CG COMPOSITING</span><span>COLOUR GRADING</span><span>VFX PIPELINE</span>
+          <!-- dupe for seamless loop -->
+          <span>NUKE</span><span>AFTER EFFECTS</span><span>MAYA</span><span>BLENDER</span>
+          <span>PHOTOSHOP</span><span>PREMIERE PRO</span><span>KEYING</span><span>ROTOSCOPING</span>
+          <span>CG COMPOSITING</span><span>COLOUR GRADING</span><span>VFX PIPELINE</span>
+        </div>
+      </div>
+
+      <div class="sw-grid slide-up d1">
+        <div class="sw-item"><img src="nuke.png" alt="Nuke"><span class="sw-label">Nuke</span></div>
+        <div class="sw-item"><img src="after-effects.png" alt="After Effects"><span class="sw-label">After Effects</span></div>
+        <div class="sw-item"><img src="photoshop.png" alt="Photoshop"><span class="sw-label">Photoshop</span></div>
+        <div class="sw-item"><img src="maya.png" alt="Maya"><span class="sw-label">Maya</span></div>
+        <div class="sw-item"><img src="blender.png" alt="Blender"><span class="sw-label">Blender</span></div>
+        <div class="sw-item"><img src="premiere-pro.png" alt="Premiere Pro"><span class="sw-label">Premiere</span></div>
+      </div>
+
+      <!-- SKILL BARS -->
+      <div class="skills-bars slide-up d2" id="skillBars">
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">Compositing</span><span class="skill-bar-pct">92%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="92"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">Keying & Roto</span><span class="skill-bar-pct">88%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="88"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">Nuke</span><span class="skill-bar-pct">85%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="85"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">After Effects</span><span class="skill-bar-pct">90%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="90"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">Colour Grading</span><span class="skill-bar-pct">80%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="80"></div></div>
+        </div>
+        <div class="skill-bar-item">
+          <div class="skill-bar-top"><span class="skill-bar-name">Maya / Blender</span><span class="skill-bar-pct">72%</span></div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="72"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ TIMELINE / JOURNEY -->
+    <div class="timeline-section">
+      <div class="sl slide-left">04 / Journey</div>
+      <div class="tl-line">
+        <div class="tl-item slide-left d1">
+          <div class="tl-year">2023 — PRESENT</div>
+          <div class="tl-title">Bachelor of Visual Effects, Animation & Compositing</div>
+          <div class="tl-place">Dr. D. Y. Patil Vidyapeeth · Pune, Maharashtra</div>
+          <div class="tl-desc">Mastering compositing pipeline, green-screen keying, multi-pass CG integration, paint prep, and colour grading workflows.</div>
+        </div>
+        <div class="tl-item slide-left d2">
+          <div class="tl-year">2023</div>
+          <div class="tl-title">Specialisation in Compositing</div>
+          <div class="tl-place">Core Focus: Nuke & After Effects</div>
+          <div class="tl-desc">Deep dive into industry-standard node-based compositing workflows and keying precision techniques.</div>
+        </div>
+        <div class="tl-item slide-left d3">
+          <div class="tl-year">2026</div>
+          <div class="tl-title">Showreel — Released</div>
+          <div class="tl-place">Green Screen · Paint · CG Compositing</div>
+          <div class="tl-desc">Compiled professional showreel demonstrating full spectrum of compositing and VFX skills.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ EDUCATION -->
+    <div class="edu-section">
+      <div class="sl slide-left">05 / Education</div>
+      <div class="edu-card slide-scale d1">
+        <div class="edu-year">2023 — 2026</div>
+        <div class="edu-div"></div>
+        <div>
+          <div class="edu-degree">Visual Effects, Animation & Compositing</div>
+          <div class="edu-school">Dr. D. Y. Patil Vidyapeeth · Pune, Maharashtra</div>
+          <div class="edu-note">Bachelor's Degree · In Progress · Aug 2023 – Jun 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="f-name">Saran Selvakumar</div>
+      <div class="f-copy">© 2026 · Compositing Artist</div>
+      <a href="#" class="f-back">↑ Back to top</a>
+    </div>
+
+  </div><!-- .page -->
+</div><!-- .page-wrap -->
 
 <script>
-/* ── LOADER ── */
-document.body.classList.add('loading');
-const loaderBar = document.getElementById('loaderBar');
-const loaderCounter = document.getElementById('loaderCounter');
+/* ═══════════════════════════════
+   LOADER
+═══════════════════════════════ */
+const lBar = document.getElementById('lBar');
+const lPct = document.getElementById('lPct');
 const loader = document.getElementById('loader');
-let progress = 0;
-
+let prog = 0;
 const tick = setInterval(() => {
-  const step = progress < 70 ? Math.random() * 6 + 2 : Math.random() * 2 + 0.5;
-  progress = Math.min(progress + step, 99);
-  loaderBar.style.width = progress + '%';
-  loaderCounter.textContent = Math.floor(progress) + '%';
-}, 60);
+  const step = prog < 70 ? Math.random()*7+2 : Math.random()*2+0.4;
+  prog = Math.min(prog + step, 99);
+  lBar.style.width = prog + '%';
+  lPct.textContent = Math.floor(prog) + '%';
+}, 55);
 
 function finishLoader() {
   clearInterval(tick);
-  progress = 100;
-  loaderBar.style.width = '100%';
-  loaderCounter.textContent = '100%';
-
+  lBar.style.width = '100%'; lPct.textContent = '100%';
   setTimeout(() => {
-    loader.classList.add('split');
+    loader.classList.add('open');
     document.body.classList.remove('loading');
-    document.body.classList.add('loaded');
-    setTimeout(() => { loader.style.display = 'none'; }, 800);
+    document.body.classList.add('ready');
+    // trigger hero slides
+    document.querySelectorAll('.slide-up,.slide-left,.slide-right,.slide-scale').forEach(el => {
+      const hero = el.closest('.hero');
+      if (hero) setTimeout(() => el.classList.add('in'), 100);
+    });
+    setTimeout(() => { loader.style.display = 'none'; }, 1000);
   }, 300);
 }
+window.addEventListener('load', () => setTimeout(finishLoader, 500));
+setTimeout(finishLoader, 3000);
 
-window.addEventListener('load', () => setTimeout(finishLoader, 600));
-setTimeout(finishLoader, 3200); /* fallback */
-
-/* ── CUSTOM CURSOR ── */
-const dot = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = -100, my = -100, rx = -100, ry = -100;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
-(function animRing(){ rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
-document.querySelectorAll('a, button, .sw-item, .edu-card, .photo-frame').forEach(el => {
-  el.addEventListener('mouseenter', () => { ring.style.width='56px'; ring.style.height='56px'; dot.style.transform='translate(-50%,-50%) scale(1.5)'; });
-  el.addEventListener('mouseleave', () => { ring.style.width='36px'; ring.style.height='36px'; dot.style.transform='translate(-50%,-50%) scale(1)'; });
+/* ═══════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════ */
+const dot = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  dot.style.left=mx+'px'; dot.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*0.11; ry+=(my-ry)*0.11;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.sw-item,.edu-card,.stat,.orbit-wrap').forEach(el => {
+  el.addEventListener('mouseenter',()=>{ ring.style.width='54px'; ring.style.height='54px'; dot.style.transform='translate(-50%,-50%) scale(1.6)'; });
+  el.addEventListener('mouseleave',()=>{ ring.style.width='34px'; ring.style.height='34px'; dot.style.transform='translate(-50%,-50%) scale(1)'; });
 });
 
-/* ── TYPEWRITER ── */
-const phrases = ['Compositing Artist', 'Keying & Rotoscoping', 'Multi-Pass CG', 'Colour Grading'];
-let pi = 0, ci = 0, deleting = false;
-const tw = document.getElementById('typewriter');
-function typeLoop() {
-  const current = phrases[pi];
-  if (!deleting) {
-    tw.textContent = current.slice(0, ++ci);
-    if (ci === current.length) { deleting = true; setTimeout(typeLoop, 1800); return; }
-  } else {
-    tw.textContent = current.slice(0, --ci);
-    if (ci === 0) { deleting = false; pi = (pi+1)%phrases.length; setTimeout(typeLoop, 300); return; }
-  }
-  setTimeout(typeLoop, deleting ? 45 : 90);
+/* ═══════════════════════════════
+   TYPEWRITER
+═══════════════════════════════ */
+const phrases=['Compositing Artist','Keying & Rotoscoping','Multi-Pass CG','Colour Grading','VFX Specialist'];
+let pi=0,ci=0,del=false;
+const tw=document.getElementById('typewriter');
+function typeLoop(){
+  const cur=phrases[pi];
+  if(!del){ tw.textContent=cur.slice(0,++ci); if(ci===cur.length){del=true;setTimeout(typeLoop,1800);return;} }
+  else { tw.textContent=cur.slice(0,--ci); if(ci===0){del=false;pi=(pi+1)%phrases.length;setTimeout(typeLoop,300);return;} }
+  setTimeout(typeLoop,del?42:85);
 }
-setTimeout(typeLoop, 800);
+setTimeout(typeLoop,900);
 
-/* ── SCROLL REVEAL ── */
-const reveals = document.querySelectorAll('.reveal');
+/* ═══════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════ */
+const revEls = document.querySelectorAll('.slide-up,.slide-left,.slide-right,.slide-scale');
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
-reveals.forEach(r => io.observe(r));
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revEls.forEach(el => {
+  if (!el.closest('.hero')) io.observe(el);
+});
 
-/* ── PARTICLES ── */
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let W, H, pool = [];
-function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', ()=>{ resize(); build(); });
-function rand(a,b){ return a + Math.random()*(b-a); }
+/* ═══════════════════════════════
+   SKILL BAR TRIGGER
+═══════════════════════════════ */
+const barIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      document.querySelectorAll('.skill-bar-fill').forEach(fill => {
+        fill.style.width = fill.dataset.w + '%';
+      });
+      barIO.disconnect();
+    }
+  });
+}, { threshold: 0.2 });
+barIO.observe(document.getElementById('skillBars'));
 
-class Dot {
-  constructor(){ this.spawn(true); }
-  spawn(init){ this.x=rand(0,W); this.y=init?rand(0,H):H+6; this.r=rand(0.3,1.4); this.vy=rand(0.1,0.45); this.vx=rand(-0.08,0.08); this.a=rand(0.06,0.38); this.t=0; this.T=rand(280,700); }
-  step(){ this.x+=this.vx; this.y-=this.vy; this.t++; const p=this.t/this.T; this.o=p<.15?(p/.15)*this.a:p>.75?((1-p)/.25)*this.a:this.a; if(this.t>=this.T||this.y<-8)this.spawn(); }
-  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${this.o})`; ctx.fill(); }
+/* ═══════════════════════════════
+   COUNTER ANIMATION
+═══════════════════════════════ */
+const countEls = document.querySelectorAll('.stat-num[data-count]');
+const countIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const target = +e.target.dataset.count;
+      let cur=0; const inc=target/60;
+      const interval=setInterval(()=>{
+        cur=Math.min(cur+inc,target);
+        e.target.textContent = target===100 ? Math.floor(cur)+'%' : Math.floor(cur)+'+';
+        if(cur>=target) clearInterval(interval);
+      },16);
+      countIO.unobserve(e.target);
+    }
+  });
+},{threshold:0.5});
+countEls.forEach(el=>countIO.observe(el));
+
+/* ═══════════════════════════════
+   PARTICLES
+═══════════════════════════════ */
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W,H,pool=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize(); window.addEventListener('resize',()=>{resize();build();});
+const rand=(a,b)=>a+Math.random()*(b-a);
+
+class Dot{
+  constructor(){this.spawn(true);}
+  spawn(i){this.x=rand(0,W);this.y=i?rand(0,H):H+6;this.r=rand(0.2,1.3);this.vy=rand(0.08,0.4);this.vx=rand(-0.06,0.06);this.a=rand(0.04,0.32);this.t=0;this.T=rand(300,700);}
+  step(){this.x+=this.vx;this.y-=this.vy;this.t++;const p=this.t/this.T;this.o=p<.15?(p/.15)*this.a:p>.75?((1-p)/.25)*this.a:this.a;if(this.t>=this.T||this.y<-8)this.spawn();}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${this.o})`;ctx.fill();}
 }
-class Streak {
-  constructor(){ this.spawn(true); }
-  spawn(init){ this.x=rand(0,W); this.y=init?rand(0,H):H+40; this.len=rand(35,110); this.vy=rand(0.18,0.55); this.a=rand(0.025,0.09); this.t=0; this.T=rand(350,900); }
-  step(){ this.y-=this.vy; this.t++; const p=this.t/this.T; this.o=p<.12?(p/.12)*this.a:p>.8?((1-p)/.2)*this.a:this.a; if(this.t>=this.T||this.y<-this.len)this.spawn(); }
-  draw(){ const g=ctx.createLinearGradient(this.x,this.y,this.x,this.y+this.len); g.addColorStop(0,`rgba(255,255,255,0)`); g.addColorStop(.45,`rgba(255,255,255,${this.o})`); g.addColorStop(1,`rgba(255,255,255,0)`); ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x,this.y+this.len); ctx.strokeStyle=g; ctx.lineWidth=0.7; ctx.stroke(); }
+class Streak{
+  constructor(){this.spawn(true);}
+  spawn(i){this.x=rand(0,W);this.y=i?rand(0,H):H+50;this.len=rand(40,120);this.vy=rand(0.15,0.5);this.a=rand(0.02,0.08);this.t=0;this.T=rand(400,900);}
+  step(){this.y-=this.vy;this.t++;const p=this.t/this.T;this.o=p<.12?(p/.12)*this.a:p>.8?((1-p)/.2)*this.a:this.a;if(this.t>=this.T||this.y<-this.len)this.spawn();}
+  draw(){const g=ctx.createLinearGradient(this.x,this.y,this.x,this.y+this.len);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.45,`rgba(255,255,255,${this.o})`);g.addColorStop(1,'rgba(255,255,255,0)');ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x,this.y+this.len);ctx.strokeStyle=g;ctx.lineWidth=0.6;ctx.stroke();}
 }
-class Scan {
-  constructor(){ this.spawn(true); }
-  spawn(init){ this.y=init?rand(0,H):-2; this.x=rand(0,W*0.6); this.w=rand(60,220); this.vy=rand(0.3,1.0); this.a=rand(0.015,0.06); this.t=0; this.T=rand(200,600); }
-  step(){ this.y+=this.vy; this.t++; const p=this.t/this.T; this.o=p<.1?(p/.1)*this.a:p>.8?((1-p)/.2)*this.a:this.a; if(this.t>=this.T||this.y>H+4)this.spawn(); }
-  draw(){ const g=ctx.createLinearGradient(this.x,this.y,this.x+this.w,this.y); g.addColorStop(0,`rgba(255,255,255,0)`); g.addColorStop(.5,`rgba(255,255,255,${this.o})`); g.addColorStop(1,`rgba(255,255,255,0)`); ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.w,this.y); ctx.strokeStyle=g; ctx.lineWidth=0.6; ctx.stroke(); }
+class RustStreak{
+  constructor(){this.spawn(true);}
+  spawn(i){this.x=rand(0,W);this.y=i?rand(0,H):H+50;this.len=rand(20,60);this.vy=rand(0.12,0.4);this.a=rand(0.015,0.06);this.t=0;this.T=rand(300,700);}
+  step(){this.y-=this.vy;this.t++;const p=this.t/this.T;this.o=p<.12?(p/.12)*this.a:p>.8?((1-p)/.2)*this.a:this.a;if(this.t>=this.T||this.y<-this.len)this.spawn();}
+  draw(){const g=ctx.createLinearGradient(this.x,this.y,this.x,this.y+this.len);g.addColorStop(0,'rgba(201,58,40,0)');g.addColorStop(.5,`rgba(201,58,40,${this.o})`);g.addColorStop(1,'rgba(201,58,40,0)');ctx.beginPath();ctx.moveTo(this.x,this.y);ctx.lineTo(this.x,this.y+this.len);ctx.strokeStyle=g;ctx.lineWidth=0.5;ctx.stroke();}
 }
 
-function build(){ pool=[]; for(let i=0;i<130;i++) pool.push(new Dot()); for(let i=0;i<35;i++) pool.push(new Streak()); for(let i=0;i<20;i++) pool.push(new Scan()); }
+function build(){
+  pool=[];
+  for(let i=0;i<120;i++) pool.push(new Dot());
+  for(let i=0;i<30;i++) pool.push(new Streak());
+  for(let i=0;i<18;i++) pool.push(new RustStreak());
+}
 build();
-(function loop(){ ctx.clearRect(0,0,W,H); pool.forEach(p=>{ p.step(); p.draw(); }); requestAnimationFrame(loop); })();
-</script>
+(function loop(){ctx.clearRect(0,0,W,H);pool.forEach(p=>{p.step();p.draw();});requestAnimationFrame(loop);})();
 
+/* ═══════════════════════════════
+   FOOTER BACK LINK
+═══════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const fb = document.querySelector('.f-back');
+  if(window.scrollY > 400) fb.style.opacity = '0.7';
+  else fb.style.opacity = '0';
+});
+</script>
 </body>
 </html>
