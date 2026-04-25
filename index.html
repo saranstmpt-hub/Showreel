@@ -93,13 +93,21 @@
     font-family: var(--display);
     font-size: clamp(32px, 8vw, 96px);
     letter-spacing: 0.12em;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--red);
     overflow: hidden;
     white-space: nowrap;
     text-align: center;
     padding: 0 16px;
+    display: flex;
+    gap: 0.25em;
+    justify-content: center;
+    align-items: flex-end;
   }
+  .loader-word {
+    overflow: hidden;
+    display: inline-flex;
+  }
+  .loader-word.red  { color: var(--red-bright); }
+  .loader-word.white { color: var(--white); }
   .loader-name span {
     display: inline-block;
     transform: translateY(110%);
@@ -162,8 +170,7 @@
     nav {
       position: sticky;
       top: 0;
-      height: 56px;
-      flex-wrap: wrap;
+      height: 52px;
       padding: 0 16px;
     }
   }
@@ -177,49 +184,59 @@
   }
   .nav-logo span { color: var(--red-bright); }
 
-  /* Hamburger button (mobile only) */
-  .nav-hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    z-index: 30;
-  }
-  .nav-hamburger span {
-    display: block;
-    width: 22px; height: 2px;
-    background: var(--white);
-    border-radius: 2px;
-    transition: all 0.3s;
-  }
-  .nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
-  .nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-  @media (max-width: 768px) {
-    .nav-hamburger { display: flex; }
-  }
+  /* No hamburger — hide it always */
+  .nav-hamburger { display: none; }
 
   .nav-links {
     display: flex; gap: 2px;
   }
 
+  /* ── MOBILE TAB STRIP ── sits below the logo bar */
   @media (max-width: 768px) {
     .nav-links {
-      display: none;
-      position: absolute;
-      top: 56px; left: 0; right: 0;
-      flex-direction: column;
-      background: rgba(13,13,15,0.97);
-      border-bottom: 1px solid var(--white-faint);
-      padding: 8px 0 16px;
-      z-index: 25;
-      gap: 0;
+      display: none; /* hidden inside top bar */
     }
-    .nav-links.open { display: flex; }
+
+    /* Separate tab strip element */
+    #mobile-tabs {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0;
+      background: rgba(13,13,15,0.95);
+      border-bottom: 1px solid var(--white-faint);
+      position: sticky;
+      top: 52px;
+      z-index: 19;
+      padding: 0 4px;
+    }
+    #mobile-tabs::-webkit-scrollbar { display: none; }
+
+    .mob-tab {
+      flex: 0 0 auto;
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 12px 16px 10px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .mob-tab.active {
+      color: var(--red-bright);
+      border-bottom-color: var(--red-bright);
+    }
+  }
+
+  /* Hide mobile tabs on desktop */
+  @media (min-width: 769px) {
+    #mobile-tabs { display: none; }
   }
 
   .nav-btn {
@@ -235,18 +252,6 @@
     cursor: none;
     transition: color 0.25s;
     overflow: hidden;
-  }
-
-  @media (max-width: 768px) {
-    .nav-btn {
-      cursor: pointer;
-      font-size: 11px;
-      padding: 14px 24px;
-      text-align: left;
-      width: 100%;
-      letter-spacing: 0.2em;
-    }
-    .nav-btn::before { display: none; }
   }
 
   .nav-btn::before {
@@ -745,9 +750,6 @@
   <!-- NAVBAR -->
   <nav>
     <div class="nav-logo">SARAN<span>.</span>S</div>
-    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
     <div class="nav-links" id="nav-links">
       <button class="nav-btn active" data-section="profile">Profile</button>
       <button class="nav-btn" data-section="education">Education</button>
@@ -756,6 +758,15 @@
       <button class="nav-btn" data-section="contact">Contact</button>
     </div>
   </nav>
+
+  <!-- MOBILE TAB STRIP (visible only on mobile) -->
+  <div id="mobile-tabs">
+    <button class="mob-tab active" data-section="profile">Profile</button>
+    <button class="mob-tab" data-section="education">Education</button>
+    <button class="mob-tab" data-section="skills">Skills</button>
+    <button class="mob-tab" data-section="showreel">Showreel</button>
+    <button class="mob-tab" data-section="contact">Contact</button>
+  </div>
 
   <!-- CONTENT -->
   <div id="content">
@@ -1003,27 +1014,25 @@ function drawBg() {
 drawBg();
 
 /* ── LOADER ──────────────────────────────────────────── */
-const name = "SARAN SELVAKUMAR";
 const loaderName = document.getElementById('loader-name');
-name.split('').forEach((ch, i) => {
-  const s = document.createElement('span');
-  s.textContent = ch === ' ' ? '\u00A0' : ch;
-  s.style.animationDelay = (i * 0.045 + 0.1) + 's';
-  loaderName.appendChild(s);
+const words = [{ text: 'SARAN', cls: 'red' }, { text: 'SELVAKUMAR', cls: 'white' }];
+let globalIdx = 0;
+words.forEach(word => {
+  const wordEl = document.createElement('span');
+  wordEl.className = 'loader-word ' + word.cls;
+  word.text.split('').forEach(ch => {
+    const s = document.createElement('span');
+    s.textContent = ch;
+    s.style.animationDelay = (globalIdx * 0.045 + 0.1) + 's';
+    globalIdx++;
+    wordEl.appendChild(s);
+  });
+  loaderName.appendChild(wordEl);
 });
 
 setTimeout(() => {
   document.getElementById('loader').classList.add('done');
 }, 2000);
-
-/* ── HAMBURGER MENU ──────────────────────────────────── */
-const hamburger = document.getElementById('hamburger');
-const navLinks  = document.getElementById('nav-links');
-
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  navLinks.classList.toggle('open');
-});
 
 /* ── NAV / SECTIONS ──────────────────────────────────── */
 const sections = {};
@@ -1040,19 +1049,30 @@ function showSection(id) {
   prev.classList.remove('active');
   setTimeout(() => next.classList.add('active'), 80);
   current = id;
+
+  // sync desktop nav buttons
   document.querySelectorAll('.nav-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.section === id);
   });
 
-  // On mobile: close menu & scroll to top
+  // sync mobile tabs
+  document.querySelectorAll('.mob-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.section === id);
+  });
+
+  // on mobile scroll to top
   if (isMobile()) {
-    hamburger.classList.remove('open');
-    navLinks.classList.remove('open');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
+// desktop nav
 document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => showSection(btn.dataset.section));
+});
+
+// mobile tab strip
+document.querySelectorAll('.mob-tab').forEach(btn => {
   btn.addEventListener('click', () => showSection(btn.dataset.section));
 });
 </script>
