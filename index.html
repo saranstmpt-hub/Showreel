@@ -6,783 +6,365 @@
 <title>Saran Selvakumar — Paint Prep Artist</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  /* ─── RESET & VARS ─────────────────────────────────── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg:        #0d0d0f;
-    --bg2:       #111114;
-    --bg3:       #16161a;
-    --red:       #c0392b;
-    --red-bright:#e74c3c;
-    --red-glow:  rgba(192,57,43,0.18);
-    --red-dim:   rgba(192,57,43,0.08);
-    --white:     #f0ede8;
-    --white-dim: rgba(240,237,232,0.55);
-    --white-faint:rgba(240,237,232,0.12);
-    --mono:      'JetBrains Mono', monospace;
-    --body:      'Outfit', sans-serif;
-    --display:   'Bebas Neue', sans-serif;
+    --bg:         #0d0d0f;
+    --bg3:        #16161a;
+    --red:        #c0392b;
+    --red-bright: #e74c3c;
+    --red-dim:    rgba(192,57,43,0.08);
+    --white:      #f0ede8;
+    --white-dim:  rgba(240,237,232,0.55);
+    --white-faint:rgba(240,237,232,0.10);
+    --mono:       'JetBrains Mono', monospace;
+    --body:       'Outfit', sans-serif;
+    --display:    'Bebas Neue', sans-serif;
+    --max:        860px;
+    --pad:        clamp(20px, 6vw, 80px);
   }
 
-  html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
+  html { scroll-behavior: smooth; }
+
+  body {
     background: var(--bg);
     color: var(--white);
     font-family: var(--body);
+    overflow-x: hidden;
     cursor: none;
   }
+  @media (max-width: 768px) { body { cursor: auto; } }
 
-  /* ─── MOBILE: restore normal scroll & cursor ───────── */
-  @media (max-width: 768px) {
-    html, body {
-      overflow-x: hidden;
-      overflow-y: auto;
-      cursor: auto;
-      height: auto;
-      max-width: 100vw;
-    }
-  }
-
-  /* ─── CUSTOM CURSOR (desktop only) ─────────────────── */
+  /* CURSOR */
   #cursor, #cursor-ring {
     position: fixed; top: 0; left: 0;
     pointer-events: none;
     transform: translate(-50%,-50%);
   }
   #cursor {
-    z-index: 9999;
-    width: 10px; height: 10px;
-    background: var(--red-bright);
-    border-radius: 50%;
-    transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+    z-index: 9999; width: 10px; height: 10px;
+    background: var(--red-bright); border-radius: 50%;
+    transition: width 0.2s, height 0.2s, background 0.2s;
   }
   #cursor-ring {
-    z-index: 9998;
-    width: 36px; height: 36px;
-    border: 1.5px solid rgba(192,57,43,0.5);
-    border-radius: 50%;
-    transition: transform 0.18s ease, width 0.25s, height 0.25s, border-color 0.25s;
+    z-index: 9998; width: 36px; height: 36px;
+    border: 1.5px solid rgba(192,57,43,0.5); border-radius: 50%;
+    transition: width 0.25s, height 0.25s, border-color 0.25s;
   }
   body.hovering #cursor { width: 6px; height: 6px; background: var(--white); }
   body.hovering #cursor-ring { width: 52px; height: 52px; border-color: var(--red-bright); }
+  @media (max-width: 768px) { #cursor, #cursor-ring { display: none; } }
 
-  @media (max-width: 768px) {
-    #cursor, #cursor-ring { display: none; }
-  }
+  /* CANVAS */
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-  /* ─── CANVAS BG ─────────────────────────────────── */
-  #bg-canvas {
-    position: fixed; inset: 0; z-index: 0;
-    pointer-events: none;
-  }
-
-  /* ─── LOADING SCREEN ─────────────────────────────── */
+  /* LOADER */
   #loader {
     position: fixed; inset: 0; z-index: 1000;
     background: var(--bg);
     display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 32px;
+    align-items: center; justify-content: center; gap: 32px;
   }
   #loader.done { animation: loaderOut 0.7s 0.3s forwards; }
-  @keyframes loaderOut {
-    to { opacity: 0; pointer-events: none; transform: translateY(-12px); }
-  }
+  @keyframes loaderOut { to { opacity: 0; pointer-events: none; transform: translateY(-12px); } }
 
   .loader-name {
     font-family: var(--display);
     font-size: clamp(32px, 8vw, 96px);
     letter-spacing: 0.12em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-align: center;
-    padding: 0 16px;
-    display: flex;
-    gap: 0.25em;
-    justify-content: center;
-    align-items: flex-end;
+    display: flex; gap: 0.25em;
+    justify-content: center; padding: 0 16px;
   }
-  .loader-word {
-    overflow: hidden;
-    display: inline-flex;
-  }
-  .loader-word.red  { color: var(--red-bright); }
+  .loader-word { overflow: hidden; display: inline-flex; }
+  .loader-word.red   { color: var(--red-bright); }
   .loader-word.white { color: var(--white); }
   .loader-name span {
     display: inline-block;
     transform: translateY(110%);
     animation: letterDrop 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
   }
+  @keyframes letterDrop { to { transform: translateY(0); } }
+
   .loader-bar-wrap {
     width: min(280px, 80vw); height: 2px;
-    background: var(--white-faint);
-    border-radius: 2px; overflow: hidden;
+    background: var(--white-faint); border-radius: 2px; overflow: hidden;
   }
   .loader-bar {
     height: 100%; width: 0%;
     background: linear-gradient(90deg, var(--red), var(--red-bright));
     animation: loadBar 1.6s cubic-bezier(0.4,0,0.2,1) forwards;
-    border-radius: 2px;
   }
   @keyframes loadBar { to { width: 100%; } }
-  @keyframes letterDrop { to { transform: translateY(0); } }
 
   .loader-sub {
     font-family: var(--mono);
     font-size: clamp(9px, 2.5vw, 11px);
-    letter-spacing: 0.25em;
-    color: var(--red);
+    letter-spacing: 0.25em; color: var(--red);
     text-transform: uppercase;
-    opacity: 0;
-    animation: fadeIn 0.5s 1.2s forwards;
-    text-align: center;
-    padding: 0 16px;
+    opacity: 0; animation: fadeIn 0.5s 1.2s forwards;
+    text-align: center; padding: 0 16px;
   }
   @keyframes fadeIn { to { opacity: 1; } }
 
-  /* ─── MAIN LAYOUT ─────────────────────────────────── */
+  /* APP */
   #app {
-    position: fixed; inset: 0; z-index: 10;
-    display: flex; flex-direction: column;
+    position: relative; z-index: 10;
     opacity: 0; animation: fadeIn 0.8s 2s forwards;
   }
 
-  @media (max-width: 768px) {
-    #app {
-      position: static;
-      min-height: 100vh;
-    }
-  }
-
-  /* ─── NAVBAR ─────────────────────────────────────── */
-  nav {
+  /* STICKY HEADER */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    height: 60px;
     display: flex; align-items: center;
-    padding: 0 clamp(16px,4vw,64px);
-    height: 64px;
+    padding: 0 var(--pad);
+    background: rgba(13,13,15,0.88);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--white-faint);
-    backdrop-filter: blur(12px);
-    background: rgba(13,13,15,0.85);
-    flex-shrink: 0;
-    position: relative; z-index: 20;
   }
-
-  @media (max-width: 768px) {
-    nav {
-      position: sticky;
-      top: 0;
-      height: 52px;
-      padding: 0 16px;
-    }
-  }
-
-  .nav-logo {
+  .logo {
     font-family: var(--display);
-    font-size: 20px;
-    letter-spacing: 0.15em;
-    color: var(--white);
-    margin-right: auto;
+    font-size: 20px; letter-spacing: 0.15em; color: var(--white);
   }
-  .nav-logo span { color: var(--red-bright); }
+  .logo span { color: var(--red-bright); }
 
-  /* No hamburger — hide it always */
-  .nav-hamburger { display: none; }
-
-  .nav-links {
-    display: flex; gap: 2px;
+  /* SECTIONS */
+  section {
+    width: 100%;
+    padding: clamp(56px, 8vw, 110px) var(--pad);
+    border-bottom: 1px solid var(--white-faint);
   }
 
-  /* ── MOBILE TAB STRIP ── sits below the logo bar */
-  @media (max-width: 768px) {
-    .nav-links {
-      display: none; /* hidden inside top bar */
-    }
-
-    /* Separate tab strip element */
-    #mobile-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto auto;
-      background: rgba(13,13,15,0.95);
-      border-bottom: 1px solid var(--white-faint);
-      position: sticky;
-      top: 52px;
-      z-index: 19;
-      width: 100%;
-    }
-
-    /* row 1: Profile Education Skills */
-    /* row 2: Showreel Contact — centre them using col-span trick */
-    .mob-tab:nth-child(4) { grid-column: 1 / 2; }
-    .mob-tab:nth-child(5) { grid-column: 2 / 3; }
-
-    /* push row-2 tabs to centre visually */
-    #mobile-tabs::after {
-      content: '';
-      grid-column: 3 / 4;
-      grid-row: 2;
-    }
-
-    .mob-tab {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--white-dim);
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      padding: 11px 8px 9px;
-      cursor: pointer;
-      transition: color 0.2s, border-color 0.2s;
-      white-space: nowrap;
-      text-align: center;
-    }
-    .mob-tab.active {
-      color: var(--red-bright);
-      border-bottom-color: var(--red-bright);
-    }
+  .inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    width: 100%;
   }
 
-  /* Hide mobile tabs on desktop */
-  @media (min-width: 769px) {
-    #mobile-tabs { display: none; }
-  }
-
-  .nav-btn {
-    position: relative;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--white-dim);
-    background: none;
-    border: none;
-    padding: 10px 16px;
-    cursor: none;
-    transition: color 0.25s;
-    overflow: hidden;
-  }
-
-  .nav-btn::before {
-    content: '';
-    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 0; height: 2px;
-    background: var(--red-bright);
-    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
-    border-radius: 2px;
-  }
-  .nav-btn:hover { color: var(--white); }
-  .nav-btn:hover::before { width: 60%; }
-  .nav-btn.active { color: var(--red-bright); }
-  .nav-btn.active::before { width: 60%; }
-
-  /* ─── CONTENT AREA ─────────────────────────────────── */
-  #content {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-
-  @media (max-width: 768px) {
-    #content {
-      overflow: visible;
-      flex: none;
-    }
-  }
-
-  .section {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    padding: clamp(24px,4vw,64px) clamp(16px,5vw,80px);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(20px);
-    transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1),
-                transform 0.5s cubic-bezier(0.4,0,0.2,1);
-    overflow-y: auto;
-  }
-  .section.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    .section {
-      position: static;
-      opacity: 1;
-      pointer-events: auto;
-      transform: none;
-      display: none;
-      padding: 24px 16px 48px;
-      overflow: hidden;
-      align-items: flex-start;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .section.active {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .inner {
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-  }
-
-  /* ─── SECTION LABEL ─────────────────────────────────── */
   .section-tag {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 16px;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--red); text-transform: uppercase;
+    margin-bottom: 20px;
     display: flex; align-items: center; gap: 12px;
   }
   .section-tag::before {
-    content: '';
-    display: block; width: 32px; height: 1px;
-    background: var(--red);
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--red);
   }
 
-  /* ─── PROFILE ─────────────────────────────────────── */
-  #sec-profile .inner {
-    max-width: 860px; width: 100%;
+  /* PROFILE */
+  #profile .inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
+    gap: 60px; align-items: center;
   }
-
-  @media (max-width: 768px) {
-    #sec-profile .inner {
-      grid-template-columns: 1fr;
-      gap: 28px;
-    }
+  @media (max-width: 700px) {
+    #profile .inner { grid-template-columns: 1fr; gap: 28px; }
   }
 
   .profile-name {
     font-family: var(--display);
-    font-size: clamp(48px, 10vw, 100px);
-    line-height: 0.92;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    margin-bottom: 20px;
+    font-size: clamp(52px, 10vw, 100px);
+    line-height: 0.92; letter-spacing: 0.04em;
+    color: var(--white); margin-bottom: 16px;
   }
-  .profile-name em {
-    font-style: normal;
-    color: var(--red-bright);
-  }
+  .profile-name em { font-style: normal; color: var(--red-bright); }
 
   .profile-role {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 28px;
+    font-size: 11px; letter-spacing: 0.22em;
+    color: var(--red); text-transform: uppercase;
     display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0;
   }
   .profile-role::after {
-    content: '';
-    flex: 1; height: 1px;
+    content: ''; flex: 1; height: 1px;
     background: linear-gradient(90deg, var(--red), transparent);
     max-width: 80px;
   }
 
   .profile-bio {
-    font-size: clamp(13px, 2.5vw, 15px);
-    line-height: 1.8;
-    color: var(--white-dim);
-    font-weight: 300;
-    border-left: 2px solid var(--red);
-    padding-left: 24px;
-    margin-bottom: 20px;
+    font-size: clamp(13px, 2vw, 15px);
+    line-height: 1.8; color: var(--white-dim); font-weight: 300;
+    border-left: 2px solid var(--red); padding-left: 20px;
   }
   .profile-bio strong { color: var(--white); font-weight: 500; }
 
-  .profile-chips {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
-  .chip {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border: 1px solid var(--white-faint);
-    border-radius: 3px;
-    color: var(--white-dim);
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-    cursor: default;
-  }
-  .chip:hover {
-    border-color: var(--red);
-    color: var(--red-bright);
-    background: var(--red-dim);
-  }
-
-  /* ─── EDUCATION ─────────────────────────────────────── */
-  #sec-education .inner {
-    max-width: 740px; width: 100%;
-  }
-
+  /* EDUCATION */
   .edu-card {
-    border: 1px solid var(--white-faint);
-    border-radius: 8px;
-    padding: clamp(24px, 4vw, 36px) clamp(20px, 4vw, 40px);
-    background: var(--bg3);
-    position: relative;
-    overflow: hidden;
+    border: 1px solid var(--white-faint); border-radius: 8px;
+    padding: clamp(24px, 4vw, 40px);
+    background: var(--bg3); position: relative; overflow: hidden;
     transition: border-color 0.3s;
   }
   .edu-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
+    content: ''; position: absolute; top: 0; left: 0;
     width: 3px; height: 100%;
     background: linear-gradient(180deg, var(--red), var(--red-bright));
   }
   .edu-card:hover { border-color: rgba(192,57,43,0.4); }
 
   .edu-year {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--red);
-    text-transform: uppercase;
-    margin-bottom: 12px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; color: var(--red);
+    text-transform: uppercase; margin-bottom: 12px;
   }
   .edu-degree {
     font-family: var(--display);
     font-size: clamp(26px, 5vw, 42px);
-    letter-spacing: 0.05em;
-    color: var(--white);
-    line-height: 1.1;
-    margin-bottom: 6px;
+    letter-spacing: 0.05em; color: var(--white);
+    line-height: 1.1; margin-bottom: 6px;
   }
   .edu-spec {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--red-bright);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--red-bright); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 20px;
   }
   .edu-inst {
-    font-size: 13px;
-    color: var(--white-dim);
-    margin-bottom: 28px;
+    font-size: 13px; color: var(--white-dim); margin-bottom: 24px;
     display: flex; align-items: center; gap: 8px;
   }
   .edu-inst::before { content: '◈'; color: var(--red); font-size: 10px; }
-  .edu-points {
-    list-style: none;
-    display: flex; flex-direction: column; gap: 10px;
-  }
+  .edu-points { list-style: none; display: flex; flex-direction: column; gap: 10px; }
   .edu-points li {
-    font-size: 13px;
-    color: var(--white-dim);
-    padding-left: 20px;
-    position: relative;
-    line-height: 1.6;
-    font-weight: 300;
+    font-size: 13px; color: var(--white-dim);
+    padding-left: 20px; position: relative;
+    line-height: 1.6; font-weight: 300;
   }
-  .edu-points li::before {
-    content: '—';
-    position: absolute; left: 0;
-    color: var(--red);
-    font-family: var(--mono);
-  }
+  .edu-points li::before { content: '—'; position: absolute; left: 0; color: var(--red); font-family: var(--mono); }
 
-  /* ─── SKILLS ─────────────────────────────────────── */
-  #sec-skills .inner {
-    max-width: 900px; width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+  /* SKILLS */
+  .skills-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
   }
-
-  @media (max-width: 768px) {
-    #sec-skills .inner {
-      grid-template-columns: 1fr;
-      width: 100%;
-      max-width: 100%;
-      gap: 12px;
-    }
-    .software-strip {
-      grid-column: 1 / -1;
-    }
-    .skill-group {
-      width: 100%;
-      min-width: 0;
-      overflow: hidden;
-    }
-    .skill-group-name {
-      font-size: 18px;
-    }
-  }
+  @media (max-width: 600px) { .skills-grid { grid-template-columns: 1fr; } }
 
   .skill-group {
-    border: 1px solid var(--white-faint);
-    border-radius: 6px;
-    padding: 20px 24px;
-    background: var(--bg3);
+    border: 1px solid var(--white-faint); border-radius: 6px;
+    padding: 20px 24px; background: var(--bg3);
     transition: border-color 0.3s, transform 0.3s;
-    position: relative; overflow: hidden;
+    position: relative; overflow: hidden; min-width: 0;
   }
   .skill-group::after {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, var(--red), transparent);
-    transform: scaleX(0); transform-origin: left;
-    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s;
   }
   .skill-group:hover { border-color: rgba(192,57,43,0.35); transform: translateY(-3px); }
   .skill-group:hover::after { transform: scaleX(1); }
 
   .skill-group-name {
-    font-family: var(--display);
-    font-size: 20px;
-    letter-spacing: 0.08em;
-    color: var(--white);
-    margin-bottom: 10px;
-    word-break: break-word;
+    font-family: var(--display); font-size: 20px;
+    letter-spacing: 0.08em; color: var(--white);
+    margin-bottom: 8px; word-break: break-word;
   }
   .skill-desc {
-    font-size: 12px;
-    color: var(--white-dim);
-    line-height: 1.65;
-    font-weight: 300;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    font-size: 12px; color: var(--white-dim);
+    line-height: 1.65; font-weight: 300; overflow-wrap: break-word;
   }
 
   .software-strip {
     grid-column: 1 / -1;
-    border: 1px solid var(--white-faint);
-    border-radius: 6px;
-    padding: 20px 24px;
-    background: var(--bg3);
+    border: 1px solid var(--white-faint); border-radius: 6px;
+    padding: 20px 24px; background: var(--bg3);
   }
   .software-strip-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 14px;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 14px;
   }
   .sw-tags { display: flex; flex-wrap: wrap; gap: 8px; }
   .sw-tag {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    padding: 5px 12px;
-    border: 1px solid var(--white-faint);
-    border-radius: 3px;
-    color: var(--white-dim);
-    transition: all 0.2s;
-    cursor: default;
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.08em; padding: 5px 12px;
+    border: 1px solid var(--white-faint); border-radius: 3px;
+    color: var(--white-dim); transition: all 0.2s; cursor: default;
   }
-  .sw-tag:hover {
-    border-color: var(--red);
-    color: var(--red-bright);
-    background: var(--red-dim);
-    transform: translateY(-2px);
-  }
+  .sw-tag:hover { border-color: var(--red); color: var(--red-bright); background: var(--red-dim); transform: translateY(-2px); }
 
-  /* ─── SHOWREEL ─────────────────────────────────────── */
-  #sec-showreel {
-    padding: clamp(20px, 3vw, 48px) clamp(16px, 4vw, 64px);
-    align-items: flex-start;
-  }
-
-  #sec-showreel .reel-full-inner {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  @media (max-width: 768px) {
-    #sec-showreel {
-      padding: 24px 16px 48px;
-    }
-    #sec-showreel .reel-full-inner {
-      width: 100%;
-      max-width: 100%;
-    }
-    .reel-iframe-wrap {
-      width: 100%;
-      border-radius: 6px;
-    }
-    .reel-meta {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-  }
-
+  /* SHOWREEL */
   .reel-iframe-wrap {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid var(--white-faint);
-    background: var(--bg3);
+    width: 100%; aspect-ratio: 16 / 9;
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--white-faint); background: var(--bg3);
     box-shadow: 0 16px 48px rgba(0,0,0,0.5);
     transition: border-color 0.3s, box-shadow 0.3s;
+    margin-top: 20px;
   }
-  .reel-iframe-wrap:hover {
-    border-color: rgba(192,57,43,0.4);
-    box-shadow: 0 20px 60px rgba(192,57,43,0.15);
-  }
-
-  .reel-iframe-wrap iframe {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border: none;
-  }
+  .reel-iframe-wrap:hover { border-color: rgba(192,57,43,0.4); box-shadow: 0 20px 60px rgba(192,57,43,0.15); }
+  .reel-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
 
   .reel-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 20px;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-top: 16px; align-items: center; justify-content: space-between;
   }
-
   .reel-year-badge {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--red);
-    text-transform: uppercase;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.25em; color: var(--red); text-transform: uppercase;
   }
-
-  .reel-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
+  .reel-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .reel-chip {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.1em;
-    padding: 4px 12px;
-    border: 1px solid var(--white-faint);
-    border-radius: 3px;
-    color: var(--white-dim);
-    text-transform: uppercase;
+    font-family: var(--mono); font-size: 9.5px;
+    letter-spacing: 0.1em; padding: 4px 12px;
+    border: 1px solid var(--white-faint); border-radius: 3px;
+    color: var(--white-dim); text-transform: uppercase;
   }
 
-  /* ─── CONTACT ─────────────────────────────────────── */
-  #sec-contact .inner {
-    max-width: 680px; width: 100%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
+  /* CONTACT */
+  #contact .inner { text-align: center; }
   .contact-headline {
     font-family: var(--display);
-    font-size: clamp(48px, 12vw, 90px);
-    letter-spacing: 0.06em;
-    color: var(--white);
-    line-height: 0.95;
-    margin-bottom: 20px;
+    font-size: clamp(52px, 12vw, 90px);
+    letter-spacing: 0.06em; color: var(--white);
+    line-height: 0.95; margin-bottom: 20px;
   }
   .contact-headline span { color: var(--red-bright); }
-
   .contact-sub {
-    font-size: clamp(13px, 2.5vw, 14px);
-    color: var(--white-dim);
-    font-weight: 300;
-    margin-bottom: 40px;
-    line-height: 1.7;
-    max-width: 500px;
+    font-size: 14px; color: var(--white-dim);
+    font-weight: 300; margin-bottom: 40px; line-height: 1.7;
   }
-
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    width: 100%;
-  }
-
+  .contact-links { display: flex; flex-direction: column; gap: 12px; align-items: center; }
   .contact-link {
     display: flex; align-items: center; gap: 16px;
-    text-decoration: none;
-    color: var(--white-dim);
+    text-decoration: none; color: var(--white-dim);
     font-family: var(--mono);
-    font-size: clamp(10px, 2.5vw, 12px);
-    letter-spacing: 0.1em;
+    font-size: clamp(10px, 2.5vw, 12px); letter-spacing: 0.1em;
     padding: 16px 24px;
-    border: 1px solid var(--white-faint);
-    border-radius: 6px;
+    border: 1px solid var(--white-faint); border-radius: 6px;
     width: 100%; max-width: 440px;
-    background: var(--bg3);
-    transition: all 0.3s;
-    position: relative; overflow: hidden;
-    cursor: pointer;
+    background: var(--bg3); transition: all 0.3s;
+    position: relative; overflow: hidden; cursor: pointer;
   }
   .contact-link::before {
-    content: '';
-    position: absolute; left: 0; top: 0;
-    width: 3px; height: 100%;
-    background: var(--red);
-    transform: scaleY(0);
-    transition: transform 0.3s;
+    content: ''; position: absolute; left: 0; top: 0;
+    width: 3px; height: 100%; background: var(--red);
+    transform: scaleY(0); transition: transform 0.3s;
   }
-  .contact-link:hover {
-    border-color: rgba(192,57,43,0.4);
-    color: var(--white);
-    transform: translateX(6px);
-  }
+  .contact-link:hover { border-color: rgba(192,57,43,0.4); color: var(--white); transform: translateX(6px); }
   .contact-link:hover::before { transform: scaleY(1); }
   .contact-link-icon { font-size: 15px; flex-shrink: 0; width: 28px; text-align: center; }
   .contact-link-text { flex: 1; text-align: left; word-break: break-all; }
   .contact-link-arrow { opacity: 0; transition: opacity 0.2s, transform 0.2s; flex-shrink: 0; }
   .contact-link:hover .contact-link-arrow { opacity: 1; transform: translateX(4px); }
 
-  /* ─── FOOTER ─────────────────────────────────────── */
-  #footer {
-    height: 40px;
-    display: flex; align-items: center; justify-content: center;
+  /* FOOTER */
+  footer {
+    height: 48px; display: flex;
+    align-items: center; justify-content: center;
     border-top: 1px solid var(--white-faint);
-    flex-shrink: 0;
-    position: relative; z-index: 20;
-    background: rgba(13,13,15,0.7);
   }
   .footer-text {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: rgba(240,237,232,0.2);
-    text-transform: uppercase;
-    text-align: center;
-    padding: 0 12px;
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.22em; color: rgba(240,237,232,0.2);
+    text-transform: uppercase; text-align: center; padding: 0 12px;
   }
   .footer-text span { color: var(--red); }
 
-  /* ─── NOISE OVERLAY ─────────────────────────────────── */
+  /* NOISE */
   #noise {
-    position: fixed; inset: 0; z-index: 5;
-    pointer-events: none; opacity: 0.025;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 </style>
 </head>
@@ -793,81 +375,52 @@
 <div id="noise"></div>
 <canvas id="bg-canvas"></canvas>
 
-<!-- ── LOADER ─────────────────────────────────────────── -->
 <div id="loader">
   <div class="loader-name" id="loader-name"></div>
   <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
   <div class="loader-sub">VFX · Paint Prep · Compositing</div>
 </div>
 
-<!-- ── APP ─────────────────────────────────────────────── -->
 <div id="app">
 
-  <!-- NAVBAR -->
-  <nav>
-    <div class="nav-logo">SARAN<span>.</span>S</div>
-    <div class="nav-links" id="nav-links">
-      <button class="nav-btn active" data-section="profile">Profile</button>
-      <button class="nav-btn" data-section="education">Education</button>
-      <button class="nav-btn" data-section="skills">Skills</button>
-      <button class="nav-btn" data-section="showreel">Showreel</button>
-      <button class="nav-btn" data-section="contact">Contact</button>
+  <header>
+    <div class="logo">SARAN<span>.</span>S</div>
+  </header>
+
+  <section id="profile">
+    <div class="inner">
+      <div>
+        <div class="section-tag">Portfolio</div>
+        <h1 class="profile-name">SARAN<br><em>SELVAKUMAR</em></h1>
+        <div class="profile-role">Paint Prep Artist · Fresher</div>
+      </div>
+      <div class="profile-bio">
+        Fresher <strong>Paint Prep Artist</strong> trained in compositing, keying, rotoscoping, and VFX pipelines. Final year at <strong>Dr. D. Y. Patil Vidyapeeth, Pune</strong> — with a 2026 Demo Reel to show for it.
+      </div>
     </div>
-  </nav>
+  </section>
 
-  <!-- MOBILE TAB STRIP (visible only on mobile) -->
-  <div id="mobile-tabs">
-    <button class="mob-tab active" data-section="profile">Profile</button>
-    <button class="mob-tab" data-section="education">Education</button>
-    <button class="mob-tab" data-section="skills">Skills</button>
-    <button class="mob-tab" data-section="showreel">Showreel</button>
-    <button class="mob-tab" data-section="contact">Contact</button>
-  </div>
-
-  <!-- CONTENT -->
-  <div id="content">
-
-    <!-- PROFILE -->
-    <section class="section active" id="sec-profile">
-      <div class="inner">
-        <div class="profile-left">
-          <div class="section-tag">Portfolio</div>
-          <h1 class="profile-name">SARAN<br><em>SELVAKUMAR</em></h1>
-          <div class="profile-role">Paint Prep Artist · Fresher</div>
-        </div>
-        <div class="profile-right">
-          <p class="profile-bio">
-            A motivated and detail-oriented <strong>Paint Prep Artist</strong> with hands-on training in digital compositing, keying, rotoscoping, and VFX pipeline workflows. Pursuing a <strong>Bachelor of Applied Arts and Crafts</strong> (Graphics, Animation and VFX) at Dr. D. Y. Patil Vidyapeeth, Pune. Passionate about delivering <strong>seamless, frame-accurate visuals</strong> and keen to grow within a professional studio environment.
-          </p>
-          <p class="profile-bio">
-            Currently in the final year of the degree programme, building a strong foundation in <strong>green-screen keying, rotoscoping, paint prep</strong>, and multi-pass CG integration — with a 2026 Demo Reel to demonstrate the work.
-          </p>
-        </div>
+  <section id="education">
+    <div class="inner">
+      <div class="section-tag">Academic Background</div>
+      <div class="edu-card">
+        <div class="edu-year">Aug 2023 — Jun 2026 &nbsp;·&nbsp; In Progress</div>
+        <div class="edu-degree">BACHELOR OF<br>APPLIED ARTS<br>& CRAFTS</div>
+        <div class="edu-spec">Graphics · Animation · VFX</div>
+        <div class="edu-inst">Dr. D. Y. Patil Vidyapeeth, Pune, Maharashtra</div>
+        <ul class="edu-points">
+          <li>Specialisation in Graphics, Animation and VFX with focus on digital post-production</li>
+          <li>Produced a 2026 Demo Reel showcasing green-screen compositing, paint prep, and multi-pass CG compositing</li>
+          <li>Active coursework in VFX pipeline, colour theory, and professional post-production workflows</li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- EDUCATION -->
-    <section class="section" id="sec-education">
-      <div class="inner">
-        <div class="section-tag">Academic Background</div>
-        <div class="edu-card">
-          <div class="edu-year">Aug 2023 — Jun 2026 &nbsp;·&nbsp; In Progress</div>
-          <div class="edu-degree">BACHELOR OF<br>APPLIED ARTS<br>& CRAFTS</div>
-          <div class="edu-spec">Graphics · Animation · VFX</div>
-          <div class="edu-inst">Dr. D. Y. Patil Vidyapeeth, Pune, Maharashtra</div>
-          <ul class="edu-points">
-            <li>Specialisation in Graphics, Animation and VFX with focus on digital post-production</li>
-            <li>Produced a 2026 Demo Reel showcasing green-screen compositing, paint prep work, and multi-pass CG compositing</li>
-            <li>Active coursework in VFX pipeline, colour theory, and professional post-production workflows</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="section" id="sec-skills">
-      <div class="inner">
-        <div class="section-tag" style="grid-column:1/-1">Capabilities</div>
+  <section id="skills">
+    <div class="inner">
+      <div class="section-tag">Capabilities</div>
+      <div class="skills-grid">
         <div class="skill-group">
           <div class="skill-group-name">Paint Prep</div>
           <div class="skill-desc">Wire & rig removal, dust busting, beauty retouching, and frame-accurate cleanup over moving footage.</div>
@@ -899,67 +452,61 @@
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SHOWREEL -->
-    <section class="section" id="sec-showreel">
-      <div class="reel-full-inner">
-        <div class="section-tag" style="margin-bottom:20px;">2026 Demo Reel</div>
-        <div class="reel-iframe-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/I44_cce6_-4"
-            title="Saran Selvakumar — 2026 VFX Demo Reel"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen>
-          </iframe>
-        </div>
-        <div class="reel-meta">
-          <div class="reel-year-badge">2026 · Pune, India</div>
-          <div class="reel-chips">
-            <div class="reel-chip">Paint Prep</div>
-            <div class="reel-chip">Compositing</div>
-            <div class="reel-chip">Rotoscoping</div>
-            <div class="reel-chip">CG Integration</div>
-          </div>
+  <section id="showreel">
+    <div class="inner">
+      <div class="section-tag">2026 Demo Reel</div>
+      <div class="reel-iframe-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/I44_cce6_-4"
+          title="Saran Selvakumar — 2026 VFX Demo Reel"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <div class="reel-meta">
+        <div class="reel-year-badge">2026 · Pune, India</div>
+        <div class="reel-chips">
+          <div class="reel-chip">Paint Prep</div>
+          <div class="reel-chip">Compositing</div>
+          <div class="reel-chip">Rotoscoping</div>
+          <div class="reel-chip">CG Integration</div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CONTACT -->
-    <section class="section" id="sec-contact">
-      <div class="inner">
-        <div class="section-tag" style="justify-content:center">Get In Touch</div>
-        <div class="contact-headline">LET'S<br><span>WORK.</span></div>
-        <p class="contact-sub">Open to entry-level Paint Prep Artist and Junior Compositing opportunities. Feel free to reach out.</p>
-        <div class="contact-links">
-          <a class="contact-link" href="mailto:sarantmpt24@gmail.com">
-            <span class="contact-link-icon">✉</span>
-            <span class="contact-link-text">sarantmpt24@gmail.com</span>
-            <span class="contact-link-arrow">→</span>
-          </a>
-          <a class="contact-link" href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" rel="noopener">
-            <span class="contact-link-icon">in</span>
-            <span class="contact-link-text">linkedin.com/in/saran-s-8691343b1</span>
-            <span class="contact-link-arrow">→</span>
-          </a>
-        </div>
+  <section id="contact">
+    <div class="inner">
+      <div class="section-tag" style="justify-content:center;">Get In Touch</div>
+      <div class="contact-headline">LET'S<br><span>WORK.</span></div>
+      <p class="contact-sub">Open to entry-level Paint Prep Artist and Junior Compositing opportunities. Feel free to reach out.</p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:sarantmpt24@gmail.com">
+          <span class="contact-link-icon">✉</span>
+          <span class="contact-link-text">sarantmpt24@gmail.com</span>
+          <span class="contact-link-arrow">→</span>
+        </a>
+        <a class="contact-link" href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" rel="noopener">
+          <span class="contact-link-icon">in</span>
+          <span class="contact-link-text">linkedin.com/in/saran-s-8691343b1</span>
+          <span class="contact-link-arrow">→</span>
+        </a>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </div><!-- /content -->
-
-  <div id="footer">
+  <footer>
     <div class="footer-text">© 2026 <span>Saran Selvakumar</span> · Paint Prep Artist · VFX & Compositing</div>
-  </div>
+  </footer>
 
-</div><!-- /app -->
+</div>
 
 <script>
-/* ── IS MOBILE ─────────────────────────────────────────── */
 const isMobile = () => window.innerWidth <= 768;
-
-/* ── CURSOR (desktop only) ─────────────────────────────── */
 const cur  = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
@@ -967,170 +514,87 @@ let mx = 0, my = 0, rx = 0, ry = 0;
 if (!isMobile()) {
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
-    cur.style.left = mx + 'px';
-    cur.style.top  = my + 'px';
+    cur.style.left = mx + 'px'; cur.style.top = my + 'px';
   });
-
-  function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
+  (function animRing() {
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
     requestAnimationFrame(animRing);
-  }
-  animRing();
-
-  document.querySelectorAll('a, button, .chip, .sw-tag, .skill-group').forEach(el => {
+  })();
+  document.querySelectorAll('a, .sw-tag, .skill-group').forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
   });
 }
 
-/* ── CANVAS BACKGROUND ───────────────────────────────── */
+/* CANVAS */
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
 
-function resize() {
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-const PARTICLE_COUNT = isMobile() ? 25 : 55;
-const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
-  x: Math.random() * innerWidth,
-  y: Math.random() * innerHeight,
-  vx: (Math.random() - 0.5) * 0.35,
-  vy: (Math.random() - 0.5) * 0.35,
+const COUNT = isMobile() ? 25 : 55;
+const particles = Array.from({ length: COUNT }, () => ({
+  x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+  vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
   r: Math.random() * 1.4 + 0.3,
   alpha: Math.random() * 0.35 + 0.05,
   red: Math.random() < 0.3
 }));
-
 const orbs = [
   { x: innerWidth * 0.15, y: innerHeight * 0.25, r: 260, vx: 0.18, vy: 0.12 },
   { x: innerWidth * 0.8,  y: innerHeight * 0.7,  r: 200, vx: -0.14, vy: 0.16 },
   { x: innerWidth * 0.5,  y: innerHeight * 0.5,  r: 180, vx: 0.1,  vy: -0.13 },
 ];
-
-function drawBg() {
+(function drawBg() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   orbs.forEach(o => {
     o.x += o.vx; o.y += o.vy;
     if (o.x < -o.r || o.x > canvas.width  + o.r) o.vx *= -1;
     if (o.y < -o.r || o.y > canvas.height + o.r) o.vy *= -1;
     const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-    g.addColorStop(0, 'rgba(192,57,43,0.06)');
-    g.addColorStop(1, 'rgba(192,57,43,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-    ctx.fill();
+    g.addColorStop(0, 'rgba(192,57,43,0.06)'); g.addColorStop(1, 'rgba(192,57,43,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2); ctx.fill();
   });
-
   particles.forEach(p => {
     p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.red
-      ? `rgba(192,57,43,${p.alpha})`
-      : `rgba(240,237,232,${p.alpha * 0.5})`;
+    if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.red ? `rgba(192,57,43,${p.alpha})` : `rgba(240,237,232,${p.alpha * 0.5})`;
     ctx.fill();
   });
-
   if (!isMobile()) {
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 110) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          const a = (1 - dist / 110) * 0.07;
-          ctx.strokeStyle = (particles[i].red || particles[j].red)
-            ? `rgba(192,57,43,${a})`
-            : `rgba(240,237,232,${a * 0.4})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
-        }
+    for (let i = 0; i < particles.length; i++) for (let j = i+1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 110) {
+        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+        const a = (1 - d/110) * 0.07;
+        ctx.strokeStyle = (particles[i].red || particles[j].red) ? `rgba(192,57,43,${a})` : `rgba(240,237,232,${a*0.4})`;
+        ctx.lineWidth = 0.6; ctx.stroke();
       }
     }
   }
-
   requestAnimationFrame(drawBg);
-}
-drawBg();
+})();
 
-/* ── LOADER ──────────────────────────────────────────── */
+/* LOADER */
 const loaderName = document.getElementById('loader-name');
 const words = [{ text: 'SARAN', cls: 'red' }, { text: 'SELVAKUMAR', cls: 'white' }];
-let globalIdx = 0;
-words.forEach(word => {
-  const wordEl = document.createElement('span');
-  wordEl.className = 'loader-word ' + word.cls;
-  word.text.split('').forEach(ch => {
+let gi = 0;
+words.forEach(w => {
+  const el = document.createElement('span');
+  el.className = 'loader-word ' + w.cls;
+  w.text.split('').forEach(ch => {
     const s = document.createElement('span');
     s.textContent = ch;
-    s.style.animationDelay = (globalIdx * 0.045 + 0.1) + 's';
-    globalIdx++;
-    wordEl.appendChild(s);
+    s.style.animationDelay = (gi++ * 0.045 + 0.1) + 's';
+    el.appendChild(s);
   });
-  loaderName.appendChild(wordEl);
+  loaderName.appendChild(el);
 });
-
-setTimeout(() => {
-  document.getElementById('loader').classList.add('done');
-}, 2000);
-
-/* ── NAV / SECTIONS ──────────────────────────────────── */
-const sections = {};
-document.querySelectorAll('.section').forEach(s => {
-  sections[s.id.replace('sec-', '')] = s;
-});
-
-let current = 'profile';
-
-function showSection(id) {
-  if (id === current) return;
-  const prev = sections[current];
-  const next = sections[id];
-  prev.classList.remove('active');
-  setTimeout(() => next.classList.add('active'), 80);
-  current = id;
-
-  // sync desktop nav buttons
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.section === id);
-  });
-
-  // sync mobile tabs
-  document.querySelectorAll('.mob-tab').forEach(b => {
-    b.classList.toggle('active', b.dataset.section === id);
-  });
-
-  // on mobile scroll to top
-  if (isMobile()) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-// desktop nav
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => showSection(btn.dataset.section));
-});
-
-// mobile tab strip
-document.querySelectorAll('.mob-tab').forEach(btn => {
-  btn.addEventListener('click', () => showSection(btn.dataset.section));
-});
+setTimeout(() => document.getElementById('loader').classList.add('done'), 2000);
 </script>
 </body>
 </html>
