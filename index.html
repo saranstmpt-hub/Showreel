@@ -189,44 +189,6 @@
     border-left: 1px solid var(--border);
     display: flex; align-items: flex-end;
   }
-  /* ── TO ADD YOUR PHOTO:
-     Replace the <div class="photo-ph"> block with:
-     <img src="your-photo.jpg" alt="Saran Selvakumar" style="width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.1);">
-  ── */
-  .photo-ph {
-    width: 100%; height: 100%; min-height: 80vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px;
-  }
-  .ph-circle {
-    width: 100px; height: 100px; border-radius: 50%;
-    border: 1.5px dashed rgba(255,255,255,0.12);
-    background: var(--bg3);
-  }
-  .ph-body {
-    width: 170px; height: 200px;
-    border-radius: 85px 85px 0 0;
-    border: 1.5px dashed rgba(255,255,255,0.12);
-    background: var(--bg3);
-  }
-  .ph-label {
-    font-size: 8px; letter-spacing: 0.25em; text-transform: uppercase;
-    color: rgba(255,255,255,0.2); margin-top: 12px;
-  }
-  .intro-photo-tag {
-    position: absolute; bottom: 24px; left: 24px;
-    background: var(--white); color: var(--bg);
-    font-size: 8px; letter-spacing: 0.2em;
-    text-transform: uppercase; padding: 7px 16px;
-    font-family: var(--f-mono);
-  }
-
-  /* Vertical decorative text */
-  .intro-side-text {
-    position: absolute; right: 24px; top: 50%; transform: translateY(-50%) rotate(90deg);
-    font-family: var(--f-display); font-size: 11px; letter-spacing: 0.35em;
-    color: rgba(255,255,255,0.05); white-space: nowrap; pointer-events: none;
-  }
 
 
   /* ══════════════════════════════════════════════════════
@@ -496,18 +458,12 @@
           style="width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.1);"
         >
         ─────────────────────────────────────────────────── -->
-     <img
+
+       <img
           src="Pi7_DP.jpg"
           alt="Saran Selvakumar"
           style="width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(100%) contrast(1.1);"
         >
-        <div class="ph-circle"></div>
-        <div class="ph-body"></div>
-        <span class="ph-label">Add your photo here</span>
-      </div>
-
-      <div class="intro-photo-tag">Saran Selvakumar &nbsp;·&nbsp; VFX Artist</div>
-      <div class="intro-side-text">VFX · COMPOSITING · DESIGN</div>
     </div>
 
   </section>
