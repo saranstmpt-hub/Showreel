@@ -5,19 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Saran Selvakumar — VFX Artist</title>
 
-  <!-- Google fallback fonts until custom fonts are placed in /fonts/ -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,900;1,400&family=Dancing+Script:wght@600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
 
   <style>
-  /* ═══════════════════════════════════════════════════════
-     CUSTOM FONTS
-     Place these files in a /fonts/ folder beside this HTML:
-       fonts/Strong.ttf       → display headlines
-       fonts/Cranio.ttf       → section titles
-       fonts/NicessCoffee.ttf → script/accent text
-  ═══════════════════════════════════════════════════════ */
   @font-face {
     font-family: 'Strong';
     src: url('fonts/Strong.ttf') format('truetype'),
@@ -34,7 +26,6 @@
          url('fonts/NicessCoffee.otf') format('opentype');
   }
 
-  /* ── VARIABLES ─────────────────────────────────────── */
   :root {
     --bg:         #0b0b0d;
     --bg2:        #111114;
@@ -58,7 +49,6 @@
     --max: 1000px;
   }
 
-  /* ── RESET ─────────────────────────────────────────── */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
@@ -66,7 +56,6 @@
     color: var(--white);
     font-family: var(--f-body);
     overflow-x: hidden;
-    /* Noise overlay via inline SVG */
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
     background-size: 180px 180px;
   }
@@ -95,10 +84,7 @@
   }
   .nav-links a:hover { color: var(--white); }
 
-
-  /* ══════════════════════════════════════════════════════
-     SECTION 1 — INTRODUCTION
-  ══════════════════════════════════════════════════════ */
+  /* ══ SECTION 1 — INTRODUCTION ══ */
   #introduction {
     min-height: 100vh;
     padding-top: 54px;
@@ -108,7 +94,6 @@
     border-bottom: 1px solid var(--border);
   }
 
-  /* LEFT — Photo column */
   .intro-left-photo {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -119,7 +104,6 @@
     position: relative;
   }
 
-  /* Circle DP */
   .dp-ring {
     width: clamp(220px, 28vw, 380px);
     height: clamp(220px, 28vw, 380px);
@@ -129,7 +113,6 @@
     flex-shrink: 0;
     position: relative;
   }
-  /* Red arc accent */
   .dp-ring::before {
     content: '';
     position: absolute; inset: -6px;
@@ -147,7 +130,6 @@
     filter: grayscale(100%) contrast(1.1);
   }
 
-  /* Name tag below circle */
   .dp-tag {
     font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--dim); text-align: center;
@@ -156,7 +138,6 @@
   }
   .dp-tag span { color: var(--red); }
 
-  /* Decorative vertical text left side */
   .dp-side-text {
     position: absolute; left: 16px; top: 50%;
     transform: translateY(-50%) rotate(-90deg);
@@ -164,7 +145,6 @@
     color: rgba(255,255,255,0.04); white-space: nowrap; pointer-events: none;
   }
 
-  /* RIGHT — text column */
   .intro-right-text {
     display: flex; flex-direction: column; justify-content: center;
     padding: clamp(48px, 8vw, 100px) var(--pad);
@@ -229,11 +209,7 @@
   }
   .intro-cta-dl:hover { background: var(--red); border-color: var(--red); }
 
-
-  /* ══════════════════════════════════════════════════════
-     SECTION 2 — VIDEO / SHOWREEL
-     (intentionally large — takes most of viewport)
-  ══════════════════════════════════════════════════════ */
+  /* ══ SECTION 2 — SHOWREEL ══ */
   #showreel {
     background: var(--bg4);
     padding: clamp(60px, 8vh, 120px) var(--pad);
@@ -260,7 +236,6 @@
     color: var(--dim); margin-bottom: 36px; display: block;
   }
 
-  /* Big video wrapper */
   .video-wrap {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -291,10 +266,126 @@
     color: var(--dim);
   }
 
-
   /* ══════════════════════════════════════════════════════
-     SECTION 3 — THANK YOU
+     SECTION 3 — SOFTWARE STACK
   ══════════════════════════════════════════════════════ */
+  #software {
+    background: var(--bg2);
+    padding: clamp(60px, 8vh, 120px) var(--pad);
+    border-bottom: 1px solid var(--border);
+  }
+  .software-inner { max-width: 1400px; margin: 0 auto; }
+
+  .software-label {
+    font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .software-label::before { content: ''; width: 28px; height: 1px; background: var(--red); }
+
+  .software-title {
+    font-family: var(--f-display);
+    font-size: clamp(2.4rem, 6vw, 6rem);
+    letter-spacing: 0.06em; line-height: 1;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .software-title-script {
+    font-family: var(--f-script);
+    font-size: clamp(1.4rem, 3.5vw, 3rem);
+    color: var(--dim); margin-bottom: 56px; display: block;
+  }
+
+  /* Grid of software cards */
+  .software-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--border);
+    background: var(--border); /* gap colour */
+  }
+
+  .sw-card {
+    background: var(--bg3);
+    padding: 36px 28px 32px;
+    display: flex; flex-direction: column;
+    align-items: flex-start; gap: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+  .sw-card:hover { background: #1e1e23; }
+
+  /* Hover red edge */
+  .sw-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0;
+    width: 2px; height: 100%;
+    background: var(--red);
+    transform: scaleY(0);
+    transition: transform 0.25s;
+  }
+  .sw-card:hover::before { transform: scaleY(1); }
+
+  /* Corner number */
+  .sw-num {
+    position: absolute; top: 14px; right: 18px;
+    font-family: var(--f-mono);
+    font-size: 9px; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.08);
+  }
+
+  /* Icon area — SVG icon, sized consistently */
+
+
+  .sw-body { display: flex; flex-direction: column; gap: 6px; }
+
+  .sw-name {
+    font-family: var(--f-display);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .sw-vendor {
+    font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .sw-desc {
+    font-size: 10px; line-height: 1.7; letter-spacing: 0.03em;
+    color: var(--dim); font-weight: 300;
+    margin-top: 4px;
+  }
+
+  /* Divider row between 3D tools and Adobe tools */
+  .sw-divider {
+    grid-column: 1 / -1;
+    background: var(--bg3);
+    padding: 18px 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .sw-divider-label {
+    font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(255,255,255,0.2);
+    white-space: nowrap;
+  }
+  .sw-divider-line {
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  @media (max-width: 1000px) {
+    .software-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px) {
+    .software-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 420px) {
+    .software-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ══ SECTION 4 — THANK YOU ══ */
   #thankyou {
     background: var(--bg2);
     min-height: 60vh;
@@ -305,7 +396,6 @@
     border-bottom: 1px solid var(--border);
     position: relative; overflow: hidden;
   }
-  /* Big ghost text bg */
   .ty-ghost {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
@@ -345,10 +435,7 @@
   }
   .btn-ty:hover { background: transparent; color: var(--white); }
 
-
-  /* ══════════════════════════════════════════════════════
-     SECTION 4 — CONTACT
-  ══════════════════════════════════════════════════════ */
+  /* ══ SECTION 5 — CONTACT ══ */
   #contact {
     background: var(--bg);
     padding: clamp(60px, 10vw, 120px) var(--pad);
@@ -409,8 +496,6 @@
   }
   .c-link:hover .c-arrow { opacity: 1; transform: translateX(4px); }
 
-
-  /* ── FOOTER ─────────────────────────────────────────── */
   footer {
     height: 48px; display: flex; align-items: center; justify-content: space-between;
     padding: 0 var(--pad);
@@ -426,8 +511,6 @@
     color: rgba(255,255,255,0.12);
   }
 
-
-  /* ── RESPONSIVE ──────────────────────────────────────── */
   @media (max-width: 860px) {
     #introduction { grid-template-columns: 1fr; }
     .intro-left-photo {
@@ -447,47 +530,37 @@
 </head>
 <body>
 
-  <!-- ══ NAV ══════════════════════════════════════════════ -->
+  <!-- ══ NAV ══ -->
   <nav>
     <div class="nav-logo">SARAN<span>.</span>S</div>
     <ul class="nav-links">
       <li><a href="#introduction">Intro</a></li>
       <li><a href="#showreel">Showreel</a></li>
+      <li><a href="#software">Software</a></li>
       <li><a href="#thankyou">Thanks</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
-
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 1 — INTRODUCTION
-  ══════════════════════════════════════════════════════ -->
+  <!-- ══ SECTION 1 — INTRODUCTION ══ -->
   <section id="introduction">
-
-    <!-- LEFT: circular photo -->
     <div class="intro-left-photo">
       <div class="dp-side-text">VFX · COMPOSITING · DESIGN</div>
-
       <div class="dp-ring">
         <img src="Pi7_DP.jpg" alt="Saran Selvakumar"/>
       </div>
-
       <div class="dp-tag">
         Saran Selvakumar &nbsp;<span>·</span>&nbsp; VFX Artist
       </div>
     </div>
 
-    <!-- RIGHT: text -->
     <div class="intro-right-text">
       <p class="intro-eyebrow">Portfolio &nbsp;·&nbsp; VFX &amp; Compositing</p>
-
       <h1 class="intro-name">
         SARAN
         <span class="intro-name-last">Selvakumar</span>
       </h1>
-
       <p class="intro-role">VFX Artist</p>
-
       <ul class="intro-points">
         <li>Bachelor of Applied Arts &amp; Craft from <strong>DY Patil School of Design</strong></li>
         <li>Specialised in <strong>VFX, Compositing &amp; Visual Storytelling</strong></li>
@@ -496,39 +569,27 @@
         <li>Strong foundation in colour theory, typography &amp; post-production workflows</li>
         <li>Based in <strong>India</strong> — open to opportunities in VFX &amp; creative production</li>
       </ul>
-
       <div class="intro-btns">
         <a href="#showreel" class="intro-cta">Watch Showreel</a>
         <a href="Sarancv.pdf" download="Sarancv.pdf" class="intro-cta intro-cta-dl">⬇ Download Resume</a>
       </div>
     </div>
-
   </section>
 
-
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 2 — SHOWREEL (BIG)
-  ══════════════════════════════════════════════════════ -->
+  <!-- ══ SECTION 2 — SHOWREEL ══ -->
   <section id="showreel">
     <div class="showreel-inner">
-
       <p class="showreel-label">2026 Demo Reel</p>
       <h2 class="showreel-title">SHOWREEL</h2>
       <span class="showreel-title-script">Watch the work.</span>
-
-      <!-- ── BIG VIDEO ──────────────────────────────────────
-           Replace the YouTube src with your own video link.
-           Format: https://www.youtube.com/embed/YOUR_VIDEO_ID
-      ─────────────────────────────────────────────────────── -->
       <div class="video-wrap">
         <iframe
-          src="https://www.youtube.com/embed/xfd9tv6czyU" 
+          src="https://www.youtube.com/embed/xfd9tv6czyU"
           title="Saran Selvakumar — 2026 VFX Demo Reel"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
       </div>
-
       <div class="video-meta">
         <span class="video-year">2026 &nbsp;·&nbsp; Pune, India</span>
         <div class="video-tags">
@@ -539,14 +600,128 @@
           <span class="video-tag">CG Integration</span>
         </div>
       </div>
-
     </div>
   </section>
 
 
   <!-- ══════════════════════════════════════════════════════
-       SECTION 3 — THANK YOU
+       SECTION 3 — SOFTWARE STACK
   ══════════════════════════════════════════════════════ -->
+  <section id="software">
+    <div class="software-inner">
+
+      <p class="software-label">Tools of the Trade</p>
+      <h2 class="software-title">SOFTWARE</h2>
+      <span class="software-title-script">Stack.</span>
+
+      <div class="software-grid">
+
+        <!-- ── DIVIDER: 3D & VFX ── -->
+        <div class="sw-divider">
+          <span class="sw-divider-label">3D &amp; VFX</span>
+          <span class="sw-divider-line"></span>
+        </div>
+
+        <!-- 01 Maya -->
+        <div class="sw-card">
+          <span class="sw-num">01</span>
+
+          <div class="sw-body">
+            <span class="sw-name">MAYA</span>
+            <span class="sw-vendor">Autodesk</span>
+            <p class="sw-desc">3D modelling, rigging, animation &amp; rendering for VFX production pipelines.</p>
+          </div>
+        </div>
+
+        <!-- 02 Blender -->
+        <div class="sw-card">
+          <span class="sw-num">02</span>
+
+          <div class="sw-body">
+            <span class="sw-name">BLENDER</span>
+            <span class="sw-vendor">Blender Foundation</span>
+            <p class="sw-desc">Open-source 3D suite for modelling, sculpting, VFX &amp; motion graphics.</p>
+          </div>
+        </div>
+
+        <!-- 03 Nuke -->
+        <div class="sw-card">
+          <span class="sw-num">03</span>
+
+          <div class="sw-body">
+            <span class="sw-name">NUKE</span>
+            <span class="sw-vendor">Foundry</span>
+            <p class="sw-desc">Node-based compositing used across feature film &amp; broadcast VFX pipelines.</p>
+          </div>
+        </div>
+
+        <!-- 04 Silhouette -->
+        <div class="sw-card">
+          <span class="sw-num">04</span>
+
+          <div class="sw-body">
+            <span class="sw-name">SILHOUETTE</span>
+            <span class="sw-vendor">Boris FX</span>
+            <p class="sw-desc">Industry-standard rotoscoping &amp; paint — Academy &amp; Emmy Award-winning tool.</p>
+          </div>
+        </div>
+
+        <!-- ── DIVIDER: Adobe Creative Suite ── -->
+        <div class="sw-divider">
+          <span class="sw-divider-label">Adobe Creative Suite</span>
+          <span class="sw-divider-line"></span>
+        </div>
+
+        <!-- 05 Photoshop -->
+        <div class="sw-card">
+          <span class="sw-num">05</span>
+
+          <div class="sw-body">
+            <span class="sw-name">PHOTOSHOP</span>
+            <span class="sw-vendor">Adobe</span>
+            <p class="sw-desc">Matte painting, paint prep, texture work &amp; compositing retouching.</p>
+          </div>
+        </div>
+
+        <!-- 06 Illustrator -->
+        <div class="sw-card">
+          <span class="sw-num">06</span>
+
+          <div class="sw-body">
+            <span class="sw-name">ILLUSTRATOR</span>
+            <span class="sw-vendor">Adobe</span>
+            <p class="sw-desc">Vector design, motion graphic assets &amp; title card artwork for productions.</p>
+          </div>
+        </div>
+
+        <!-- 07 After Effects -->
+        <div class="sw-card">
+          <span class="sw-num">07</span>
+
+          <div class="sw-body">
+            <span class="sw-name">AFTER EFFECTS</span>
+            <span class="sw-vendor">Adobe</span>
+            <p class="sw-desc">Motion graphics, compositing &amp; visual effects for film and broadcast media.</p>
+          </div>
+        </div>
+
+        <!-- 08 Premiere Pro -->
+        <div class="sw-card">
+          <span class="sw-num">08</span>
+
+          <div class="sw-body">
+            <span class="sw-name">PREMIERE PRO</span>
+            <span class="sw-vendor">Adobe</span>
+            <p class="sw-desc">Non-linear video editing &amp; finishing for post-production deliverables.</p>
+          </div>
+        </div>
+
+      </div><!-- /.software-grid -->
+    </div>
+  </section>
+
+
+  <!-- ══ SECTION 4 — THANK YOU ══ -->
   <section id="thankyou">
     <div class="ty-ghost" aria-hidden="true">THANKS</div>
     <div class="ty-inner">
@@ -563,12 +738,8 @@
     </div>
   </section>
 
-
-  <!-- ══════════════════════════════════════════════════════
-       SECTION 4 — CONTACT
-  ══════════════════════════════════════════════════════ -->
+  <!-- ══ SECTION 5 — CONTACT ══ -->
   <section id="contact">
-
     <div class="contact-left">
       <h2>
         Let's Work
@@ -581,7 +752,6 @@
     </div>
 
     <div class="contact-links">
-
       <a class="c-link" href="mailto:sarantmpt24@gmail.com">
         <span class="c-icon">✉</span>
         <span class="c-info">
@@ -590,7 +760,6 @@
         </span>
         <span class="c-arrow">→</span>
       </a>
-
       <a class="c-link" href="tel:+919363036113">
         <span class="c-icon">☎</span>
         <span class="c-info">
@@ -599,7 +768,6 @@
         </span>
         <span class="c-arrow">→</span>
       </a>
-
       <a class="c-link" href="https://linkedin.com/in/saran-s-8691343b1" target="_blank" rel="noopener">
         <span class="c-icon">in</span>
         <span class="c-info">
@@ -608,13 +776,10 @@
         </span>
         <span class="c-arrow">→</span>
       </a>
-
     </div>
-
   </section>
 
-
-  <!-- ══ FOOTER ════════════════════════════════════════════ -->
+  <!-- ══ FOOTER ══ -->
   <footer>
     <p class="footer-copy">© 2026 Saran Selvakumar · VFX Artist</p>
     <span class="footer-logo">SARAN S.</span>
