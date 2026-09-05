@@ -1,280 +1,496 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Saran Selvakumar — VFX Artist</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saran Selvakumar :: VFX Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --black:#0a0a0a;
-  --white:#f7f7f5;
-  --yellow:#f4c11f;
-  --gray:#8a8a85;
-  --line:rgba(247,247,245,0.12);
-  --display:'Bebas Neue', sans-serif;
-  --sans:'Outfit', sans-serif;
-  --pad: clamp(20px, 6vw, 80px);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  background:var(--black);
-  color:var(--white);
-  font-family:var(--sans);
-  font-weight:300;
-}
-img{display:block;max-width:100%;}
-a{text-decoration:none;color:inherit;}
 
-/* NAV */
-nav{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:20px var(--pad);
-  background:var(--black);
-  border-bottom:1px solid var(--line);
-}
-.logo{font-family:var(--display);font-size:1.4rem;letter-spacing:0.08em;}
-.logo span{color:var(--yellow);}
-nav ul{display:flex;gap:28px;list-style:none;}
-nav a{font-size:13px;letter-spacing:0.03em;color:var(--gray);transition:color 0.2s;}
-nav a:hover{color:var(--yellow);}
-@media(max-width:680px){nav ul{display:none;}}
+  :root {
+    --red: #b6291f;
+    --red-deep: #8f1f18;
+    --black: #141210;
+    --white: #fbf9f5;
+    --gray: #706b63;
+    --line: #2a2622;
+  }
 
-/* HERO */
-#hero{
-  display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:clamp(60px,10vh,110px) var(--pad) clamp(50px,8vh,90px);
-}
-.photo-wrap{
-  width:clamp(160px,22vw,220px);
-  height:clamp(160px,22vw,220px);
-  border-radius:50%;
-  overflow:hidden;
-  border:3px solid var(--yellow);
-  margin-bottom:28px;
-}
-.photo-wrap img{
-  width:100%;height:100%;object-fit:cover;
-}
-.eyebrow{
-  font-size:12px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--yellow);margin-bottom:12px;
-}
-h1{
-  font-family:var(--display);
-  font-size:clamp(3rem,9vw,6.5rem);
-  letter-spacing:0.03em;line-height:0.95;
-}
-.role{
-  font-size:clamp(1rem,2vw,1.3rem);
-  color:var(--gray);margin-top:10px;margin-bottom:26px;
-}
-.bio{
-  max-width:520px;font-size:14px;line-height:1.8;
-  color:#c9c9c5;margin-bottom:32px;
-}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
-.btn{
-  font-size:13px;letter-spacing:0.05em;
-  padding:12px 28px;border-radius:30px;
-  border:1px solid var(--white);
-  transition:all 0.2s;
-}
-.btn:hover{background:var(--white);color:var(--black);}
-.btn-fill{background:var(--yellow);border-color:var(--yellow);color:var(--black);font-weight:500;}
-.btn-fill:hover{background:transparent;color:var(--yellow);}
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-/* SECTION COMMON */
-.section{padding:60px var(--pad);border-top:1px solid var(--line);}
-.section-title{
-  font-family:var(--display);
-  font-size:clamp(2rem,5vw,3rem);
-  letter-spacing:0.04em;margin-bottom:8px;
-}
-.section-title span{color:var(--yellow);}
-.section-sub{color:var(--gray);font-size:14px;margin-bottom:36px;}
+  html { scroll-behavior: smooth; }
 
-/* SHOWREEL */
-.reel-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-@media(max-width:800px){.reel-grid{grid-template-columns:1fr;}}
-.reel-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#111;}
-.video-wrap{width:100%;aspect-ratio:16/9;}
-.video-wrap iframe{width:100%;height:100%;border:none;}
-.reel-meta{padding:18px 20px;}
-.reel-meta h3{font-family:var(--display);font-size:1.2rem;letter-spacing:0.04em;margin-bottom:8px;}
-.reel-meta p{font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:12px;}
-.tags{display:flex;flex-wrap:wrap;gap:6px;}
-.tag{
-  font-size:10px;letter-spacing:0.03em;
-  padding:5px 12px;border-radius:20px;
-  border:1px solid var(--line);color:var(--gray);
-}
-.tag-accent{border-color:var(--yellow);color:var(--yellow);}
+  body {
+    background-color: var(--red);
+    background-image: radial-gradient(circle, var(--black) 1.4px, transparent 1.6px);
+    background-size: 24px 24px;
+    font-family: "Inter", Arial, sans-serif;
+    color: var(--black);
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* ABOUT */
-.about-list{list-style:none;display:flex;flex-direction:column;gap:14px;max-width:640px;}
-.about-list li{
-  display:flex;gap:14px;font-size:14px;line-height:1.7;color:#c9c9c5;
-}
-.about-list li::before{content:'—';color:var(--yellow);flex-shrink:0;}
-.about-list strong{color:var(--white);font-weight:500;}
+  a { color: inherit; text-decoration: none; }
 
-/* SOFTWARE */
-.sw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-@media(max-width:900px){.sw-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.sw-grid{grid-template-columns:1fr;}}
-.sw-card{
-  border:1px solid var(--line);border-radius:10px;
-  padding:20px;transition:border-color 0.2s;
-}
-.sw-card:hover{border-color:var(--yellow);}
-.sw-name{font-family:var(--display);font-size:1.3rem;letter-spacing:0.04em;margin-bottom:4px;}
-.sw-vendor{font-size:11px;color:var(--yellow);letter-spacing:0.05em;margin-bottom:10px;}
-.sw-desc{font-size:12px;color:var(--gray);line-height:1.6;}
+  h1, h2, h3 {
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
 
-/* CONTACT */
-.contact-links{display:flex;flex-direction:column;max-width:520px;}
-.c-link{
-  display:flex;align-items:center;gap:16px;
-  padding:18px 0;border-bottom:1px solid var(--line);
-  color:var(--white);transition:color 0.2s;
-}
-.c-link:first-child{border-top:1px solid var(--line);}
-.c-link:hover{color:var(--yellow);}
-.c-icon{width:26px;text-align:center;color:var(--yellow);font-size:1.1rem;}
-.c-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);}
-.c-val{font-size:14px;}
+  .mono {
+    font-family: "IBM Plex Mono", monospace;
+  }
 
-/* FOOTER */
-footer{
-  text-align:center;padding:26px var(--pad);
-  border-top:1px solid var(--line);
-  font-size:11px;color:var(--gray);
-}
+  /* ===== NAV ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--black);
+    border-bottom: 3px solid var(--white);
+  }
+  nav {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brand {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--white);
+  }
+  .brand span { color: var(--red); }
+
+  .navlinks {
+    list-style: none;
+    display: flex;
+    gap: 26px;
+  }
+  .navlinks a {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #c9c4ba;
+    position: relative;
+    padding-bottom: 4px;
+  }
+  .navlinks a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.25s ease;
+  }
+  .navlinks a:hover {
+    color: var(--white);
+  }
+  .navlinks a:hover::after {
+    width: 100%;
+  }
+
+  /* ===== SHELL ===== */
+  .shell {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 60px 24px 100px 24px;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--white);
+    border: 3px solid var(--black);
+    padding: 52px 44px;
+    margin-bottom: 40px;
+    box-shadow: 10px 10px 0 var(--black);
+  }
+  .hero .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--red-deep);
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: 46px;
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .hero h2 {
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--gray);
+    margin-bottom: 22px;
+  }
+  .hero p {
+    max-width: 560px;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: #35322e;
+  }
+  .hero-tags {
+    margin-top: 26px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    border: 1.5px solid var(--black);
+    padding: 5px 12px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .tag:hover {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 26px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--black);
+    border: 2px solid var(--black);
+    padding: 12px 20px;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .btn-download:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .btn-download svg { width: 14px; height: 14px; }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    background: var(--white);
+    border: 3px solid var(--black);
+    margin-bottom: 32px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 16px 28px;
+    border-bottom: 2px solid var(--black);
+  }
+  .section-head .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--red-deep);
+  }
+  .section-head h3 { font-size: 22px; }
+  .section-body { padding: 28px; }
+
+  /* skills */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .skill-group h4 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 12px;
+    text-transform: lowercase;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1.5px solid var(--black);
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .chip:hover {
+    background: var(--red);
+    color: var(--white);
+    border-color: var(--red);
+    transform: translateY(-2px);
+  }
+  .skill-note {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed #cfc8ba;
+    font-size: 13.5px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* experience */
+  .job-title { font-size: 16px; font-weight: 600; }
+  .job-meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--red-deep);
+    margin: 4px 0 12px 0;
+  }
+  .section-body ul { margin-left: 18px; }
+  .section-body ul li { margin-bottom: 6px; font-size: 13.5px; line-height: 1.6; }
+
+  /* showreel */
+  .reel-intro { font-size: 13.5px; color: var(--gray); margin-bottom: 22px; line-height: 1.6; }
+  .reel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .reel-card {
+    border: 2px solid var(--black);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .reel-card:hover {
+    box-shadow: 6px 6px 0 var(--red);
+    transform: translateY(-3px);
+  }
+  .reel-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--black);
+    background: var(--black);
+    color: var(--white);
+  }
+  .ratio { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+  .ratio iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
+
+  /* education */
+  .edu-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .edu-year {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    border: 1.5px solid var(--black);
+    padding: 3px 10px;
+  }
+
+  /* contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .contact-card {
+    border: 1.5px solid var(--black);
+    padding: 14px 16px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .contact-card:hover {
+    background: var(--red);
+    color: var(--white);
+  }
+  .contact-card .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    display: block;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+  .contact-card .value { font-size: 14px; font-weight: 500; }
+
+  footer {
+    text-align: center;
+    padding: 30px 24px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--black);
+  }
+
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 32px; }
+    .skill-grid, .reel-grid { grid-template-columns: 1fr; }
+    .hero { padding: 34px 24px; }
+    .section-body { padding: 22px 18px; }
+  }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">SARAN<span>.</span>S</div>
-  <ul>
-    <li><a href="#showreel">Reels</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#software">Stack</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+<header>
+  <nav>
+    <div class="brand">SARAN <span>SELVAKUMAR</span></div>
+    <ul class="navlinks">
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#showreel">Showreel</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="photo-wrap">
-    <img src="Pi7_DP.jpg" alt="Saran Selvakumar"/>
-  </div>
-  <p class="eyebrow">VFX Artist & Compositor</p>
-  <h1>Saran Selvakumar</h1>
-  <p class="role">Compositing · Rotoscoping · CG Integration</p>
-  <p class="bio">
-    Graduate of DY Patil School of Design. I specialise in green-screen compositing,
-    rotoscoping, paint preparation and multi-pass CG integration — producing end-to-end
-    VFX pipeline work. Based in Pune, India, available globally.
-  </p>
-  <div class="hero-btns">
-    <a href="#showreel" class="btn">Watch Reels</a>
-    <a href="Sarancv.pdf" download class="btn btn-fill">Download Resume</a>
-  </div>
-</section>
+<div class="shell">
 
-<!-- SHOWREEL -->
-<section id="showreel" class="section">
-  <h2 class="section-title">SHOW<span>REEL</span></h2>
-  <p class="section-sub">Selected work.</p>
-  <div class="reel-grid">
-    <div class="reel-card">
-      <div class="video-wrap">
-        <iframe src="https://www.youtube.com/embed/hlOoovwCpRM" title="Showreel 2026" allowfullscreen loading="lazy"></iframe>
+  <div class="hero" id="profile">
+    <div class="eyebrow mono">VFX ARTIST · PUNE, INDIA</div>
+    <h1>Compositing.<br>Rotoscoping.<br>Paint Prep.</h1>
+    <h2>Frame-accurate plate work, built on a graphic design foundation.</h2>
+    <p>
+      Rotoscoping and compositing artist trained through DY Patil School of Design's VFX programme,
+      with hands-on plate work in paint prep, wire removal and frame clean-up. Comfortable working
+      across a Nuke and Silhouette-based pipeline, with a graphic design background that carries into
+      frame-accurate, detail-first output on every shot.
+    </p>
+    <div class="hero-tags">
+      <span class="tag">Nuke</span>
+      <span class="tag">Silhouette</span>
+      <span class="tag">Available for Work</span>
+    </div>
+    <a class="btn-download" href="Saran_Selvakumar_Resume.pdf" download>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Resume
+    </a>
+  </div>
+
+  <div class="section" id="skills">
+    <div class="section-head">
+      <span class="num mono">01</span>
+      <h3>Skills</h3>
+    </div>
+    <div class="section-body">
+      <div class="skill-grid">
+        <div class="skill-group">
+          <h4>core vfx skills</h4>
+          <div class="chip-row">
+            <span class="chip">Rotoscoping &amp; Matte Creation</span>
+            <span class="chip">Paint Prep &amp; Wire Removal</span>
+            <span class="chip">Green-Screen Compositing</span>
+            <span class="chip">Multi-Pass CG Integration</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h4>software</h4>
+          <div class="chip-row">
+            <span class="chip">Nuke</span>
+            <span class="chip">Silhouette</span>
+            <span class="chip">Maya</span>
+            <span class="chip">Blender</span>
+            <span class="chip">Photoshop</span>
+            <span class="chip">Illustrator</span>
+            <span class="chip">After Effects</span>
+            <span class="chip">Premiere Pro</span>
+          </div>
+        </div>
       </div>
-      <div class="reel-meta">
-        <h3>Showreel 2026</h3>
-        <p>End-to-end VFX pipeline work showcasing green-screen compositing, CG integration and full post-production workflow.</p>
-        <div class="tags">
-          <span class="tag tag-accent">VFX</span>
-          <span class="tag">Compositing</span>
-          <span class="tag">Rotoscoping</span>
+      <div class="skill-note">
+        Strong grounding in colour theory, typography and frame composition from a graphic design
+        background &mdash; translates into cleaner keys, steadier tracking and more consistent paint-outs.
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="experience">
+    <div class="section-head">
+      <span class="num mono">02</span>
+      <h3>Experience</h3>
+    </div>
+    <div class="section-body">
+      <div class="job-title">Graphic Design Intern &mdash; Arusi Home</div>
+      <div class="job-meta">JUN 2025 &ndash; AUG 2025</div>
+      <ul>
+        <li>Produced creative assets and visual content for the brand's digital platforms.</li>
+        <li>Maintained visual consistency across branding materials and marketing collateral.</li>
+        <li>Worked alongside the design team to deliver assigned tasks on schedule.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section" id="showreel">
+    <div class="section-head">
+      <span class="num mono">03</span>
+      <h3>Showreel</h3>
+    </div>
+    <div class="section-body">
+      <p class="reel-intro">
+        End-to-end 2026 VFX reel covering green-screen compositing, rotoscoping and multi-pass CG
+        integration, split by discipline below.
+      </p>
+      <div class="reel-grid">
+        <div class="reel-card">
+          <div class="reel-label mono">COMPOSITING SHOWREEL</div>
+          <div class="ratio">
+            <iframe src="https://www.youtube.com/embed/hlOoovwCpRM" title="Compositing Showreel" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="reel-card">
+          <div class="reel-label mono">PAINT PREP SHOWREEL</div>
+          <div class="ratio">
+            <iframe src="https://www.youtube.com/embed/yn8wMfmZ9mU" title="Paint Prep Showreel" allowfullscreen></iframe>
+          </div>
         </div>
       </div>
     </div>
-    <div class="reel-card">
-      <div class="video-wrap">
-        <iframe src="https://www.youtube.com/embed/yn8wMfmZ9mU" title="Paint Prep Reel" allowfullscreen loading="lazy"></iframe>
+  </div>
+
+  <div class="section" id="education">
+    <div class="section-head">
+      <span class="num mono">04</span>
+      <h3>Education</h3>
+    </div>
+    <div class="section-body">
+      <div class="edu-row">
+        <div>
+          <div class="job-title">DY Patil School of Design, Pune</div>
+          <div class="job-meta">BACHELOR'S DEGREE &mdash; APPLIED ARTS AND CRAFTS (GRAPHICS, ANIMATION &amp; VFX)</div>
+        </div>
+        <span class="edu-year mono">JUN 2026</span>
       </div>
-      <div class="reel-meta">
-        <h3>Paint Prep</h3>
-        <p>Specialist plate preparation — wire removal, rig clean-up and plate restoration.</p>
-        <div class="tags">
-          <span class="tag tag-accent">Paint Prep</span>
-          <span class="tag">Wire Removal</span>
-          <span class="tag">Silhouette</span>
+    </div>
+  </div>
+
+  <div class="section" id="contact">
+    <div class="section-head">
+      <span class="num mono">05</span>
+      <h3>Contact</h3>
+    </div>
+    <div class="section-body">
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:iamsaranselva@gmail.com">
+          <span class="label mono">EMAIL</span>
+          <span class="value">iamsaranselva@gmail.com</span>
+        </a>
+        <div class="contact-card">
+          <span class="label mono">PHONE</span>
+          <span class="value">+91 93630 36113</span>
+        </div>
+        <div class="contact-card">
+          <span class="label mono">LOCATION</span>
+          <span class="value">Pune, India</span>
+        </div>
+        <div class="contact-card">
+          <span class="label mono">LINKEDIN</span>
+          <span class="value">Link on request</span>
         </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ABOUT -->
-<section id="about" class="section">
-  <h2 class="section-title">AB<span>OUT</span></h2>
-  <p class="section-sub">The artist behind the frame.</p>
-  <ul class="about-list">
-    <li><span><strong>Bachelor of Applied Arts & Craft</strong> from DY Patil School of Design, Pune</span></li>
-    <li><span>Specialised in <strong>VFX, compositing & visual storytelling</strong> with a strong post-production foundation</span></li>
-    <li><span>Trained in <strong>green-screen compositing, rotoscoping</strong> & multi-pass CG integration</span></li>
-    <li><span>Produced a <strong>2026 Demo Reel</strong> showcasing end-to-end VFX pipeline work</span></li>
-    <li><span>Strong foundation in <strong>colour theory, typography</strong> & post-production workflows</span></li>
-    <li><span>Based in <strong>Pune, India</strong> — open to opportunities worldwide</span></li>
-  </ul>
-</section>
+</div>
 
-<!-- SOFTWARE -->
-<section id="software" class="section">
-  <h2 class="section-title">SOFT<span>WARE</span></h2>
-  <p class="section-sub">Tools I work with.</p>
-  <div class="sw-grid">
-    <div class="sw-card"><div class="sw-name">Maya</div><div class="sw-vendor">AUTODESK</div><p class="sw-desc">3D modelling, rigging & rendering for VFX pipelines.</p></div>
-    <div class="sw-card"><div class="sw-name">Blender</div><div class="sw-vendor">OPEN SOURCE</div><p class="sw-desc">3D modelling, sculpting & motion graphics.</p></div>
-    <div class="sw-card"><div class="sw-name">Nuke</div><div class="sw-vendor">FOUNDRY</div><p class="sw-desc">Node-based compositing for film & broadcast.</p></div>
-    <div class="sw-card"><div class="sw-name">Silhouette</div><div class="sw-vendor">BORIS FX</div><p class="sw-desc">Industry-standard rotoscoping & paint tool.</p></div>
-    <div class="sw-card"><div class="sw-name">Photoshop</div><div class="sw-vendor">ADOBE</div><p class="sw-desc">Matte painting, paint prep & texture work.</p></div>
-    <div class="sw-card"><div class="sw-name">Illustrator</div><div class="sw-vendor">ADOBE</div><p class="sw-desc">Vector design & title card artwork.</p></div>
-    <div class="sw-card"><div class="sw-name">After Effects</div><div class="sw-vendor">ADOBE</div><p class="sw-desc">Motion graphics & compositing for film.</p></div>
-    <div class="sw-card"><div class="sw-name">Premiere Pro</div><div class="sw-vendor">ADOBE</div><p class="sw-desc">Video editing & post-production finishing.</p></div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="section">
-  <h2 class="section-title">CON<span>TACT</span></h2>
-  <p class="section-sub">Open to VFX, compositing & creative production opportunities.</p>
-  <div class="contact-links">
-    <a class="c-link" href="mailto:sarantmpt24@gmail.com">
-      <span class="c-icon">@</span>
-      <span><div class="c-label">Email</div><div class="c-val">sarantmpt24@gmail.com</div></span>
-    </a>
-    <a class="c-link" href="tel:+919363036113">
-      <span class="c-icon">☎</span>
-      <span><div class="c-label">Mobile</div><div class="c-val">+91 93630 36113</div></span>
-    </a>
-    <a class="c-link" href="https://www.linkedin.com/in/saran-selvakumar-8691343b1/" target="_blank" rel="noopener">
-      <span class="c-icon">in</span>
-      <span><div class="c-label">LinkedIn</div><div class="c-val">saran-selvakumar-8691343b1</div></span>
-    </a>
-  </div>
-</section>
-
-<footer>© 2026 Saran Selvakumar · VFX Artist · Pune, India</footer>
+<footer class="mono">&copy; 2026 SARAN SELVAKUMAR — VFX ARTIST</footer>
 
 </body>
 </html>
