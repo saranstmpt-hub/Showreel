@@ -318,11 +318,46 @@
     color: var(--black);
   }
 
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .shell { padding: 44px 20px 80px 20px; }
+    .hero { box-shadow: 7px 7px 0 var(--black); padding: 40px 32px; }
+  }
+
   @media (max-width: 700px) {
-    .hero h1 { font-size: 32px; }
+    nav { padding: 14px 18px; justify-content: center; text-align: center; }
+    .navlinks { justify-content: center; gap: 16px 20px; row-gap: 8px; flex-wrap: wrap; width: 100%; }
+    .hero h1 { font-size: 30px; }
+    .hero h2 { font-size: 14px; }
     .skill-grid, .reel-grid { grid-template-columns: 1fr; }
-    .hero { padding: 34px 24px; }
+    .hero { padding: 30px 24px; box-shadow: 5px 5px 0 var(--black); }
     .section-body { padding: 22px 18px; }
+    .section-head { padding: 14px 18px; }
+    .section-head h3 { font-size: 18px; }
+    .edu-row { flex-direction: column; align-items: flex-start; }
+    .btn-download { width: 100%; justify-content: center; }
+  }
+
+  @media (max-width: 460px) {
+    .shell { padding: 32px 14px 60px 14px; }
+    .brand { font-size: 15px; }
+    .navlinks a { font-size: 11px; }
+    .navlinks { gap: 12px 16px; }
+    .hero { padding: 26px 18px; }
+    .hero h1 { font-size: 25px; }
+    .hero p { font-size: 13.5px; }
+    .hero-tags { gap: 8px; }
+    .tag { font-size: 10px; padding: 4px 9px; }
+    .chip { font-size: 12px; padding: 5px 10px; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .job-title { font-size: 14.5px; }
+    body { background-size: 18px 18px; }
+  }
+
+  @media (hover: none) {
+    .chip:hover, .tag:hover, .contact-card:hover, .reel-card:hover, .btn-download:hover {
+      transform: none;
+    }
   }
 </style>
 </head>
